@@ -589,6 +589,7 @@ function dismissAndSync() {
 const CHECK_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/requestInvoice';
 const VALID_CODES = ['SOLIKA2026', 'SMARTPLATE'];
 const STORAGE_KEY = 'solika_access_v1';
+const SESSION_KEY = 'solika_session_v1';
 
 function getDeviceId() {
   let id = localStorage.getItem('solika_device_id');
@@ -600,8 +601,14 @@ function getDeviceId() {
 }
 
 function checkPaywall() {
+  // Check session first (current tab), then persistent storage
+  const session = sessionStorage.getItem(SESSION_KEY);
+  if (session === 'granted') return true;
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === 'granted') return true;
+  if (saved === 'granted') {
+    sessionStorage.setItem(SESSION_KEY, 'granted');
+    return true;
+  }
   showPaywall();
   return false;
 }
@@ -626,6 +633,7 @@ function submitCode() {
   if (!code) return;
   if (VALID_CODES.includes(code)) {
     localStorage.setItem(STORAGE_KEY, 'granted');
+    sessionStorage.setItem(SESSION_KEY, 'granted');
     document.getElementById('paywall-overlay').classList.remove('show');
     renderAll();
   } else {
@@ -661,6 +669,8 @@ async function requestInvoice() {
 
 // ==================== INIT ====================
 window.addEventListener('load', () => {
+  // Clear old stale localStorage grants so paywall shows fresh
+  localStorage.removeItem(STORAGE_KEY);
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
   document.getElementById('last-sync-time').textContent = 'נתוני מאי 2026';
