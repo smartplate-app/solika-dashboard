@@ -86,6 +86,22 @@
   .store-metric span:last-child { font-weight: 600; color: var(--text); }
   .store-total-pct { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; }
 
+
+  /* PAYWALL */
+  #paywall-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:99999; align-items:center; justify-content:center; padding:20px; }
+  #paywall-overlay.show { display:flex; }
+  .pw-box { background:#1a1a1a; border:1px solid #2a2a2a; border-radius:18px; padding:32px 28px; max-width:380px; width:100%; text-align:center; }
+  .pw-logo { font-size:2.8rem; margin-bottom:8px; }
+  .pw-title { font-size:1.25rem; font-weight:800; color:var(--accent); margin-bottom:6px; }
+  .pw-sub { font-size:0.85rem; color:var(--muted); margin-bottom:20px; line-height:1.6; }
+  .pw-input { width:100%; background:#111; border:1px solid #333; border-radius:10px; padding:12px 16px; color:var(--text); font-size:1rem; text-align:center; outline:none; margin-bottom:10px; direction:ltr; }
+  .pw-input:focus { border-color:var(--accent); }
+  .pw-btn { width:100%; background:var(--accent); color:#000; font-weight:700; font-size:0.95rem; border:none; border-radius:10px; padding:13px; cursor:pointer; margin-bottom:8px; transition:opacity .2s; }
+  .pw-btn:hover { opacity:.85; }
+  .pw-btn.secondary { background:#25d366; font-size:0.88rem; padding:11px; }
+  .pw-err { color:var(--red); font-size:0.8rem; margin-top:4px; display:none; }
+  .pw-divider { border:none; border-top:1px solid #2a2a2a; margin:16px 0; }
+
   /* SYNC ERROR POPUP */
   #sync-popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
   #sync-popup.show { display: flex; }
@@ -116,6 +132,16 @@
     <div class="popup-msg" id="popup-msg">לא ניתן לטעון נתונים</div>
     <button class="popup-btn" onclick="dismissAndSync()">🔄 סנכרן עכשיו</button>
     <div class="popup-dismiss" onclick="dismissPopup()">המשך בכל זאת</div>
+  </div>
+</div>
+
+
+<!-- PAYWALL OVERLAY -->
+<div id="paywall-overlay">
+  <div class="pw-box">
+    <div class="pw-logo">🍽️</div>
+    <div class="pw-title">סוליקה — דשבורד תפעולי</div>
+    <div id="pw-content"><!-- filled by JS --></div>
   </div>
 </div>
 
@@ -558,12 +584,89 @@ function dismissAndSync() {
   triggerSync();
 }
 
+
+// ==================== PAYWALL ====================
+const CHECK_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/requestInvoice';
+const VALID_CODES = ['SOLIKA2026', 'SMARTPLATE'];
+const STORAGE_KEY = 'solika_access_v1';
+
+function getDeviceId() {
+  let id = localStorage.getItem('solika_device_id');
+  if (!id) {
+    id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('solika_device_id', id);
+  }
+  return id;
+}
+
+function checkPaywall() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved === 'granted') return true;
+  showPaywall();
+  return false;
+}
+
+function showPaywall() {
+  document.getElementById('paywall-overlay').classList.add('show');
+  document.getElementById('pw-content').innerHTML = `
+    <div class="pw-sub">לגישה לדשבורד נדרש קוד גישה, או שלח בקשה לקבלת חשבונית וקוד</div>
+    <input class="pw-input" id="pw-code-input" placeholder="קוד גישה" maxlength="20" onkeydown="if(event.key==='Enter')submitCode()" autofocus />
+    <button class="pw-btn" onclick="submitCode()">כניסה</button>
+    <div class="pw-err" id="pw-err">קוד שגוי, נסה שוב</div>
+    <hr class="pw-divider">
+    <input class="pw-input" id="pw-email-input" placeholder="כתובת המייל שלך" type="email" maxlength="80" style="margin-bottom:8px;" />
+    <button class="pw-btn secondary" id="invoice-btn" onclick="requestInvoice()">📧 שלח לי חשבונית וקוד גישה</button>
+    <div id="invoice-msg" style="display:none;margin-top:10px;font-size:0.82rem;color:#22c55e;font-weight:700;">✅ בקשתך נשלחה! נחזור אליך בהקדם.</div>
+  `;
+}
+
+function submitCode() {
+  const code = (document.getElementById('pw-code-input').value || '').trim().toUpperCase();
+  const err = document.getElementById('pw-err');
+  if (!code) return;
+  if (VALID_CODES.includes(code)) {
+    localStorage.setItem(STORAGE_KEY, 'granted');
+    document.getElementById('paywall-overlay').classList.remove('show');
+    renderAll();
+  } else {
+    err.style.display = 'block';
+    err.textContent = 'קוד שגוי, נסה שוב';
+  }
+}
+
+async function requestInvoice() {
+  const btn = document.getElementById('invoice-btn');
+  const msg = document.getElementById('invoice-msg');
+  const emailInput = document.getElementById('pw-email-input');
+  const clientEmail = emailInput ? emailInput.value.trim() : '';
+  if (!clientEmail || !clientEmail.includes('@')) {
+    if (emailInput) { emailInput.style.borderColor = 'var(--red)'; emailInput.placeholder = '⚠️ נדרש מייל תקין'; }
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '⏳ שולח...';
+  try {
+    await fetch('https://rosa-6d8ebb9e.base44.app/api/functions/requestInvoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_id: getDeviceId(), dashboard: 'Solika Dashboard', url: window.location.href, client_email: clientEmail })
+    });
+    btn.style.display = 'none';
+    msg.style.display = 'block';
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '📧 שלח לי חשבונית וקוד גישה';
+  }
+}
+
 // ==================== INIT ====================
 window.addEventListener('load', () => {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
   document.getElementById('last-sync-time').textContent = 'נתוני מאי 2026';
-  renderAll();
+  if (checkPaywall()) {
+    renderAll();
+  }
 });
 </script>
 </body>
