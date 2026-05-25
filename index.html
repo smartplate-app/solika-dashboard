@@ -753,8 +753,6 @@ async function requestInvoice() {
 
 // ==================== INIT ====================
 window.addEventListener('load', () => {
-  // Clear old stale localStorage grants so paywall shows fresh
-  localStorage.removeItem(STORAGE_KEY);
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
   document.getElementById('last-sync-time').textContent = 'נתוני מאי 2026';
