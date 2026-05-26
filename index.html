@@ -683,7 +683,12 @@ window.addEventListener('load', () => {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
   document.getElementById('last-sync-time').textContent = 'טוען...';
-  checkPaywall();
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && VALID_CODES.includes(saved)) {
+    loadDashboard();
+  } else {
+    showPaywall();
+  }
 });
 </script>
 </body>
