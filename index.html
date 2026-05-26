@@ -172,7 +172,7 @@
 </div>
 
 <!-- LOADING -->
-<div id="loading-screen">
+<div id="loading-screen" style="display:none;">
   <div class="spinner"></div>
   <div>טוען נתונים...</div>
 </div>
@@ -671,11 +671,8 @@ function submitCode() {
   }
 }
 
-// ==================== INIT ====================
-window.addEventListener('load', () => {
-  document.getElementById('panel-network').classList.add('active');
-  loadDashboard();
-});
+
+loadDashboard();
 </script>
 </body>
 </html>
