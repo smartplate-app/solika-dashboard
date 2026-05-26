@@ -641,14 +641,49 @@ function showSyncError(msg) {
 function dismissPopup() { document.getElementById('sync-popup').classList.remove('show'); }
 function dismissAndSync() { dismissPopup(); triggerSync(); }
 
+
+// ==================== PAYWALL ====================
+const STORAGE_KEY = 'gr_access_v1';
+const VALID_CODES = ['SOLIKA2026', 'SMARTPLATE'];
+
+function checkPaywall() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && VALID_CODES.includes(saved)) {
+    document.getElementById('paywall-overlay').classList.remove('show');
+    return true;
+  }
+  showPaywall();
+  return false;
+}
+
+function showPaywall() {
+  document.getElementById('pw-content').innerHTML = `
+    <input class="pw-input" id="pw-code-input" type="password" placeholder="הכנס קוד גישה" autocomplete="off" onkeydown="if(event.key==='Enter')submitCode()">
+    <div class="pw-err" id="pw-err">קוד שגוי, נסה שוב</div>
+    <button class="pw-btn" onclick="submitCode()">כניסה →</button>
+    <hr class="pw-divider">
+    <button class="pw-btn secondary" onclick="window.open('https://wa.me/972525838483','_blank')">📲 בקש גישה ב-WhatsApp</button>
+  `;
+  document.getElementById('paywall-overlay').classList.add('show');
+}
+
+function submitCode() {
+  const val = (document.getElementById('pw-code-input').value || '').trim().toUpperCase();
+  if (VALID_CODES.includes(val)) {
+    localStorage.setItem(STORAGE_KEY, val);
+    document.getElementById('paywall-overlay').classList.remove('show');
+    loadDashboard();
+  } else {
+    document.getElementById('pw-err').style.display = 'block';
+  }
+}
+
 // ==================== INIT ====================
 window.addEventListener('load', () => {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
   document.getElementById('last-sync-time').textContent = 'טוען...';
-  if (checkPaywall()) {
-    loadDashboard();
-  }
+  checkPaywall();
 });
 </script>
 </body>
