@@ -148,14 +148,7 @@
 
 
 <!-- PAYWALL OVERLAY -->
-<div id="paywall-overlay">
-  <div class="pw-box">
-    <img src="https://base44.app/api/apps/69b697029d0cd0fecb49189b/files/mp/public/69b697029d0cd0fecb49189b/a328ea08e_smartplate_logo.png" alt="SmartPlate" style="height:48px;width:auto;margin-bottom:16px;opacity:0.95;" />
-    
-    <div class="pw-title">סוליקה — דשבורד תפעולי</div>
-    <div id="pw-content"><!-- filled by JS --></div>
-  </div>
-</div>
+
 
 <header>
   <div class="logo">סוליקה <span>רשת מסעדות</span></div>
@@ -680,15 +673,8 @@ function submitCode() {
 
 // ==================== INIT ====================
 window.addEventListener('load', () => {
-  document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
-  document.getElementById('last-sync-time').textContent = 'טוען...';
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved && VALID_CODES.includes(saved)) {
-    loadDashboard();
-  } else {
-    showPaywall();
-  }
+  loadDashboard();
 });
 </script>
 </body>
