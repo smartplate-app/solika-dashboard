@@ -586,6 +586,12 @@ function renderAll() {
   renderStore('s', STORES.schuster);
   renderStore('h', STORES.hodash);
   renderNetwork();
+  // Activate default tab if none active
+  if (!document.querySelector('.panel.active')) {
+    document.getElementById('panel-network').classList.add('active');
+    const tabs = document.querySelectorAll('.tab');
+    if (tabs.length) tabs[0].classList.add('active');
+  }
 }
 
 // ==================== TABS ====================
