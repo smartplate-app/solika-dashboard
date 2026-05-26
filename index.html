@@ -392,73 +392,50 @@
 
 <script>
 // ==================== DATA ====================
-// Static data from Tabit Chef + Zester (May 2026)
-// Labor: from Tabit Chef (scraped earlier this session)
-// Food cost: from Zester (scraped this session)
-// Sales: from Tabit Chef
+const ROSA_URL = 'https://rosa-6d8ebb9e.base44.app/functions/solikaSync';
+const TRIGGER_URL = 'https://rosa-6d8ebb9e.base44.app/functions/solikaTriggerSync';
 
-const STORES = {
-  einstein: {
-    name: 'איינשטיין',
-    sales_gross: 491084,
-    sales_net: 416173,
-    labor: 123147,
-    food: 177222,
-    vendors: [
-      { name: 'חמישה קצבים בע"מ סוליקה', net: 52400 },
-      { name: 'עונות ישראל - תבלינים ירוקים', net: 28900 },
-      { name: 'מילועוף', net: 24600 },
-      { name: 'זטופאק לחם', net: 18700 },
-      { name: 'א.מ.א קייטרינג קולינרי', net: 14800 },
-      { name: 'תפוז טרי בע"מ', net: 11200 },
-      { name: 'גי.אם. גורמה', net: 9800 },
-      { name: 'ספקים נוספים', net: 16822 },
-    ]
-  },
-  schuster: {
-    name: 'שוסטר',
-    sales_gross: 341865,
-    sales_net: 289716,
-    labor: 94716,
-    food: 102479,
-    vendors: [
-      { name: 'חמישה קצבים בע"מ סוליקה', net: 29800 },
-      { name: 'עונות ישראל - תבלינים ירוקים', net: 16400 },
-      { name: 'מילועוף', net: 14200 },
-      { name: 'זטופאק לחם', net: 10800 },
-      { name: 'א. ביסקוטי בע"מ', net: 8600 },
-      { name: 'ב.א שיווק באמונה בע"מ', net: 7200 },
-      { name: 'ספקים נוספים', net: 15479 },
-    ]
-  },
-  hodash: {
-    name: 'הוד השרון',
-    sales_gross: 312944,
-    sales_net: 265207,
-    labor: 87606,
-    food: 103959,
-    vendors: [
-      { name: 'חמישה קצבים בע"מ סוליקה', net: 30200 },
-      { name: 'עונות ישראל - תבלינים ירוקים', net: 17100 },
-      { name: 'מילועוף', net: 14800 },
-      { name: 'אהרון שיווק', net: 11400 },
-      { name: 'החברה המרכזית למשקאות', net: 9600 },
-      { name: 'מ.ר כלים', net: 7800 },
-      { name: 'ספקים נוספים', net: 13059 },
-    ]
-  }
+// Default fallback (shown while loading)
+let STORES = {
+  einstein: { name: 'איינשטיין', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
+  schuster: { name: 'שוסטר', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
+  hodash: { name: 'הוד השרון', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] }
 };
 
-// ==================== UTILS ====================
-function fmt(n) {
-  if (n === null || n === undefined) return '—';
-  return '₪' + Math.round(n).toLocaleString('he-IL');
+async function loadDashboard() {
+  try {
+    const res = await fetch(ROSA_URL, { method: 'GET' });
+    if (!res.ok) throw new Error('status ' + res.status);
+    const data = await res.json();
+    if (!data.einstein) throw new Error('no einstein data');
+
+    STORES.einstein.sales_gross = data.einstein.sales_vat || 0;
+    STORES.einstein.sales_net   = data.einstein.sales_net || 0;
+    STORES.einstein.labor       = data.einstein.labor || 0;
+    STORES.einstein.food        = data.einstein.food || 0;
+    STORES.einstein.vendors     = Array.isArray(data.einstein.vendors) ? data.einstein.vendors : [];
+
+    STORES.schuster.sales_gross = data.schuster.sales_vat || 0;
+    STORES.schuster.sales_net   = data.schuster.sales_net || 0;
+    STORES.schuster.labor       = data.schuster.labor || 0;
+    STORES.schuster.food        = data.schuster.food || 0;
+    STORES.schuster.vendors     = Array.isArray(data.schuster.vendors) ? data.schuster.vendors : [];
+
+    STORES.hodash.sales_gross   = data.hodash.sales_vat || 0;
+    STORES.hodash.sales_net     = data.hodash.sales_net || 0;
+    STORES.hodash.labor         = data.hodash.labor || 0;
+    STORES.hodash.food          = data.hodash.food || 0;
+    STORES.hodash.vendors       = Array.isArray(data.hodash.vendors) ? data.hodash.vendors : [];
+
+    const ts = data.last_updated ? new Date(data.last_updated).toLocaleString('he-IL') : '';
+    document.getElementById('last-sync-time').textContent = ts ? 'עודכן: ' + ts : 'מאי 2026';
+    renderAll();
+  } catch(e) {
+    console.error('loadDashboard error:', e);
+    document.getElementById('last-sync-time').textContent = 'שגיאת טעינה';
+  }
 }
-function pct(val, base) {
-  if (!val || !base) return null;
-  return Math.round((val / base) * 1000) / 10;
-}
-function pctStr(val, base) {
+
   const p = pct(val, base);
   return p !== null ? p.toFixed(1) + '%' : '—';
 }
@@ -627,137 +604,50 @@ function showTab(name) {
 }
 
 // ==================== SYNC ====================
+// ==================== SYNC ====================
 async function triggerSync() {
   const btn = document.getElementById('sync-btn');
   btn.classList.add('loading');
   btn.innerHTML = '<span>⏳</span> מסנכרן...';
   try {
-    // Call Rosa backend to sync Tabit Chef data for Solika
-    const res = await fetch('https://rosa-6d8ebb9e.base44.app/functions/solikaSync', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'sync' })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.einstein) STORES.einstein.labor = data.einstein.labor;
-      if (data.schuster) STORES.schuster.labor = data.schuster.labor;
-      if (data.hodash) STORES.hodash.labor = data.hodash.labor;
-      if (data.einstein) STORES.einstein.sales_gross = data.einstein.sales_gross || STORES.einstein.sales_gross;
-      if (data.schuster) STORES.schuster.sales_gross = data.schuster.sales_gross || STORES.schuster.sales_gross;
-      if (data.hodash) STORES.hodash.sales_gross = data.hodash.sales_gross || STORES.hodash.sales_gross;
-      renderAll();
-      document.getElementById('last-sync-time').textContent = 'עודכן: ' + new Date().toLocaleTimeString('he-IL');
-    }
+    await fetch(TRIGGER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+    // Poll every 8 seconds for up to 3 minutes
+    let attempts = 0;
+    const poll = setInterval(async () => {
+      attempts++;
+      try {
+        const r = await fetch(ROSA_URL, { method: 'GET' });
+        const d = await r.json();
+        if (d.einstein && d.einstein.sales_vat > 0) {
+          clearInterval(poll);
+          await loadDashboard();
+          btn.classList.remove('loading');
+          btn.innerHTML = '<span>🔄</span> סנכרן';
+        }
+      } catch(_) {}
+      if (attempts > 22) { clearInterval(poll); btn.classList.remove('loading'); btn.innerHTML = '<span>🔄</span> סנכרן'; }
+    }, 8000);
   } catch(e) {
-    showSyncError('לא ניתן להתחבר לשרת. בדוק חיבור לאינטרנט.');
+    showSyncError('לא ניתן להתחבר לשרת.');
+    btn.classList.remove('loading');
+    btn.innerHTML = '<span>🔄</span> סנכרן';
   }
-  btn.classList.remove('loading');
-  btn.innerHTML = '<span>🔄</span> סנכרן';
 }
 
 function showSyncError(msg) {
   document.getElementById('popup-msg').textContent = msg;
   document.getElementById('sync-popup').classList.add('show');
 }
-function dismissPopup() {
-  document.getElementById('sync-popup').classList.remove('show');
-}
-function dismissAndSync() {
-  dismissPopup();
-  triggerSync();
-}
-
-
-// ==================== PAYWALL ====================
-const CHECK_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/requestInvoice';
-const VALID_CODES = ['SOLIKA2026', 'SMARTPLATE'];
-const STORAGE_KEY = 'solika_access_v1';
-const SESSION_KEY = 'solika_session_v1';
-
-function getDeviceId() {
-  let id = localStorage.getItem('solika_device_id');
-  if (!id) {
-    id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('solika_device_id', id);
-  }
-  return id;
-}
-
-function checkPaywall() {
-  // Check session first (current tab), then persistent storage
-  const session = sessionStorage.getItem(SESSION_KEY);
-  if (session === 'granted') return true;
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === 'granted') {
-    sessionStorage.setItem(SESSION_KEY, 'granted');
-    return true;
-  }
-  showPaywall();
-  return false;
-}
-
-function showPaywall() {
-  document.getElementById('paywall-overlay').classList.add('show');
-  document.getElementById('pw-content').innerHTML = `
-    <div class="pw-sub">לגישה לדשבורד נדרש קוד גישה, או שלח בקשה לקבלת חשבונית וקוד</div>
-    <input class="pw-input" id="pw-code-input" placeholder="קוד גישה" maxlength="20" onkeydown="if(event.key==='Enter')submitCode()" autofocus />
-    <button class="pw-btn" onclick="submitCode()">כניסה</button>
-    <div class="pw-err" id="pw-err">קוד שגוי, נסה שוב</div>
-    <hr class="pw-divider">
-    <input class="pw-input" id="pw-email-input" placeholder="כתובת המייל שלך" type="email" maxlength="80" style="margin-bottom:8px;" />
-    <button class="pw-btn secondary" id="invoice-btn" onclick="requestInvoice()">📧 שלח לי חשבונית וקוד גישה</button>
-    <div id="invoice-msg" style="display:none;margin-top:10px;font-size:0.82rem;color:#22c55e;font-weight:700;">✅ בקשתך נשלחה! נחזור אליך בהקדם.</div>
-  `;
-}
-
-function submitCode() {
-  const code = (document.getElementById('pw-code-input').value || '').trim().toUpperCase();
-  const err = document.getElementById('pw-err');
-  if (!code) return;
-  if (VALID_CODES.includes(code)) {
-    localStorage.setItem(STORAGE_KEY, 'granted');
-    sessionStorage.setItem(SESSION_KEY, 'granted');
-    document.getElementById('paywall-overlay').classList.remove('show');
-    renderAll();
-  } else {
-    err.style.display = 'block';
-    err.textContent = 'קוד שגוי, נסה שוב';
-  }
-}
-
-async function requestInvoice() {
-  const btn = document.getElementById('invoice-btn');
-  const msg = document.getElementById('invoice-msg');
-  const emailInput = document.getElementById('pw-email-input');
-  const clientEmail = emailInput ? emailInput.value.trim() : '';
-  if (!clientEmail || !clientEmail.includes('@')) {
-    if (emailInput) { emailInput.style.borderColor = 'var(--red)'; emailInput.placeholder = '⚠️ נדרש מייל תקין'; }
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = '⏳ שולח...';
-  try {
-    await fetch('https://rosa-6d8ebb9e.base44.app/api/functions/requestInvoice', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ device_id: getDeviceId(), dashboard: 'Solika Dashboard', url: window.location.href, client_email: clientEmail })
-    });
-    btn.style.display = 'none';
-    msg.style.display = 'block';
-  } catch(e) {
-    btn.disabled = false;
-    btn.textContent = '📧 שלח לי חשבונית וקוד גישה';
-  }
-}
+function dismissPopup() { document.getElementById('sync-popup').classList.remove('show'); }
+function dismissAndSync() { dismissPopup(); triggerSync(); }
 
 // ==================== INIT ====================
 window.addEventListener('load', () => {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('panel-network').classList.add('active');
-  document.getElementById('last-sync-time').textContent = 'נתוני מאי 2026';
+  document.getElementById('last-sync-time').textContent = 'טוען...';
   if (checkPaywall()) {
-    renderAll();
+    loadDashboard();
   }
 });
 </script>
