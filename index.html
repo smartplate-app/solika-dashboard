@@ -68,6 +68,7 @@
   .cost-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
   .cost-bar.labor { background: var(--blue); }
   .cost-bar.food { background: var(--orange); }
+  .cost-bar.wolt { background: #25d366; }
   .cost-pct { font-size: 0.9rem; font-weight: 700; min-width: 48px; text-align: left; }
   .cost-pct.green { color: var(--green); }
   .cost-pct.yellow { color: var(--yellow); }
@@ -233,6 +234,14 @@ window.__STATIC_DATA__ = {
         <div class="cost-amt" id="net-amt-food">—</div>
       </div>
     </div>
+    <div class="cost-row">
+      <div class="cost-label">עמלת וולט</div>
+      <div class="cost-bar-wrap"><div class="cost-bar wolt" id="net-bar-wolt" style="width:0%"></div></div>
+      <div>
+        <div class="cost-pct" id="net-pct-wolt" style="color:#25d366">—</div>
+        <div class="cost-amt" id="net-amt-wolt">—</div>
+      </div>
+    </div>
     <div class="cost-row total-line">
       <div class="cost-label" style="font-weight:700">סה"כ</div>
       <div class="cost-bar-wrap"><div class="cost-bar" style="background:linear-gradient(90deg,var(--blue),var(--orange));width:0%" id="net-bar-total"></div></div>
@@ -278,6 +287,11 @@ window.__STATIC_DATA__ = {
       <div class="cost-label">עלות מזון</div>
       <div class="cost-bar-wrap"><div class="cost-bar food" id="e-bar-food" style="width:0%"></div></div>
       <div><div class="cost-pct" id="e-pct-food">—</div><div class="cost-amt" id="e-amt-food">—</div></div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-label">עמלת וולט</div>
+      <div class="cost-bar-wrap"><div class="cost-bar wolt" id="e-bar-wolt" style="width:0%"></div></div>
+      <div><div class="cost-pct" id="e-pct-wolt" style="color:#25d366">—</div><div class="cost-amt" id="e-amt-wolt">—</div></div>
     </div>
     <div class="cost-row total-line">
       <div class="cost-label" style="font-weight:700">סה"כ</div>
@@ -329,6 +343,11 @@ window.__STATIC_DATA__ = {
       <div class="cost-bar-wrap"><div class="cost-bar food" id="s-bar-food" style="width:0%"></div></div>
       <div><div class="cost-pct" id="s-pct-food">—</div><div class="cost-amt" id="s-amt-food">—</div></div>
     </div>
+    <div class="cost-row">
+      <div class="cost-label">עמלת וולט</div>
+      <div class="cost-bar-wrap"><div class="cost-bar wolt" id="s-bar-wolt" style="width:0%"></div></div>
+      <div><div class="cost-pct" id="s-pct-wolt" style="color:#25d366">—</div><div class="cost-amt" id="s-amt-wolt">—</div></div>
+    </div>
     <div class="cost-row total-line">
       <div class="cost-label" style="font-weight:700">סה"כ</div>
       <div class="cost-bar-wrap"><div class="cost-bar" style="background:linear-gradient(90deg,var(--blue),var(--orange));width:0%" id="s-bar-total"></div></div>
@@ -379,6 +398,11 @@ window.__STATIC_DATA__ = {
       <div class="cost-bar-wrap"><div class="cost-bar food" id="h-bar-food" style="width:0%"></div></div>
       <div><div class="cost-pct" id="h-pct-food">—</div><div class="cost-amt" id="h-amt-food">—</div></div>
     </div>
+    <div class="cost-row">
+      <div class="cost-label">עמלת וולט</div>
+      <div class="cost-bar-wrap"><div class="cost-bar wolt" id="h-bar-wolt" style="width:0%"></div></div>
+      <div><div class="cost-pct" id="h-pct-wolt" style="color:#25d366">—</div><div class="cost-amt" id="h-amt-wolt">—</div></div>
+    </div>
     <div class="cost-row total-line">
       <div class="cost-label" style="font-weight:700">סה"כ</div>
       <div class="cost-bar-wrap"><div class="cost-bar" style="background:linear-gradient(90deg,var(--blue),var(--orange));width:0%" id="h-bar-total"></div></div>
@@ -400,9 +424,9 @@ const TRIGGER_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/solikaTrigge
 
 // ==================== DEFAULTS ====================
 let STORES = {
-  einstein: { name: 'איינשטיין', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
-  schuster:  { name: 'שוסטר',    sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
-  hodash:    { name: 'הוד השרון', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] }
+  einstein: { name: 'איינשטיין', sales_gross: 0, sales_net: 0, labor: 0, food: 0, wolt_vat: 0, vendors: [] },
+  schuster:  { name: 'שוסטר',    sales_gross: 0, sales_net: 0, labor: 0, food: 0, wolt_vat: 0, vendors: [] },
+  hodash:    { name: 'הוד השרון', sales_gross: 0, sales_net: 0, labor: 0, food: 0, wolt_vat: 0, vendors: [] }
 };
 
 // ==================== HELPERS ====================
@@ -481,7 +505,11 @@ function renderStore(prefix, store) {
   setClass(prefix + '-food', 'kpi-value ' + colorClass(fp));
   set(prefix + '-food-pct', pctStr(store.food, sn) + ' מהמכירות נטו');
 
-  const tp = (lp !== null && fp !== null) ? lp + fp : null;
+  // Wolt: fee = wolt_sales * 24%, pct is from GROSS sales
+  const woltFee = (store.wolt_vat || 0) * 0.24;
+  const woltPct = store.sales_gross > 0 ? (woltFee / store.sales_gross) * 100 : null;
+
+  const tp = (lp !== null && fp !== null) ? lp + fp + (woltPct || 0) : null;
   set(prefix + '-total-pct', tp !== null ? tp.toFixed(1) + '%' : '—');
   setClass(prefix + '-total-pct', 'kpi-value ' + totalColor(tp));
 
@@ -489,16 +517,19 @@ function renderStore(prefix, store) {
   const bar = (id, val) => { const el = document.getElementById(id); if (el) el.style.width = Math.min(val || 0, 70) + '%'; };
   bar(prefix + '-bar-labor', lp);
   bar(prefix + '-bar-food', fp);
+  bar(prefix + '-bar-wolt', woltPct);
   bar(prefix + '-bar-total', tp);
 
   const setP = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   setP(prefix + '-pct-labor', pctStr(store.labor, sn));
   setP(prefix + '-pct-food', pctStr(store.food, sn));
+  setP(prefix + '-pct-wolt', woltPct !== null ? woltPct.toFixed(1) + '%' : (store.wolt_vat > 0 ? '—' : 'לא מוגדר'));
   setP(prefix + '-pct-total', tp !== null ? tp.toFixed(1) + '%' : '—');
   const tpEl = document.getElementById(prefix + '-pct-total');
   if (tpEl) tpEl.className = 'cost-pct total-pct-value ' + totalColor(tp);
   setP(prefix + '-amt-labor', fmt(store.labor));
   setP(prefix + '-amt-food', fmt(store.food));
+  setP(prefix + '-amt-wolt', woltFee > 0 ? fmt(woltFee) + ' (מ-' + fmt(store.wolt_vat) + ')' : '—');
 
   renderVendors(prefix + '-vendors', store.vendors, store.food);
 }
@@ -508,6 +539,9 @@ function renderNetwork() {
   const totalSalesNet   = Object.values(STORES).reduce((s, st) => s + (st.sales_net || 0), 0);
   const totalFood       = Object.values(STORES).reduce((s, st) => s + (st.food || 0), 0);
   const totalLabor      = Object.values(STORES).reduce((s, st) => s + (st.labor || 0), 0);
+  const totalWoltVat    = Object.values(STORES).reduce((s, st) => s + (st.wolt_vat || 0), 0);
+  const totalWoltFee    = totalWoltVat * 0.24;
+  const woltNetPct      = totalSalesGross > 0 ? (totalWoltFee / totalSalesGross) * 100 : null;
 
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
@@ -525,7 +559,7 @@ function renderNetwork() {
   setClass('net-food', 'kpi-value ' + colorClass(fp));
   set('net-food-pct', pctStr(totalFood, totalSalesNet) + ' מהמכירות נטו');
 
-  const tp = (lp !== null && fp !== null) ? lp + fp : null;
+  const tp = (lp !== null && fp !== null) ? lp + fp + (woltNetPct || 0) : null;
   set('net-total-pct', tp !== null ? tp.toFixed(1) + '%' : '—');
   setClass('net-total-pct', 'kpi-value ' + totalColor(tp));
 
@@ -536,6 +570,10 @@ function renderNetwork() {
   set('net-pct-food', pctStr(totalFood, totalSalesNet));
   set('net-amt-food', fmt(totalFood));
   const bf = document.getElementById('net-bar-food'); if (bf) bf.style.width = Math.min(fp || 0, 70) + '%';
+
+  set('net-pct-wolt', woltNetPct !== null ? woltNetPct.toFixed(1) + '%' : (totalWoltVat > 0 ? '—' : 'לא מוגדר'));
+  set('net-amt-wolt', totalWoltFee > 0 ? fmt(totalWoltFee) : '—');
+  const bw = document.getElementById('net-bar-wolt'); if (bw) bw.style.width = Math.min(woltNetPct || 0, 70) + '%';
 
   const tpEl = document.getElementById('net-pct-total');
   if (tpEl) { tpEl.textContent = tp !== null ? tp.toFixed(1) + '%' : '—'; tpEl.className = 'cost-pct total-pct-value ' + totalColor(tp); }
@@ -548,7 +586,8 @@ function renderNetwork() {
       const sn = st.sales_net;
       const lpp = pct(st.labor, sn);
       const fpp = pct(st.food, sn);
-      const tpp = (lpp !== null && fpp !== null) ? (lpp + fpp).toFixed(1) : null;
+      const wpp = st.wolt_vat > 0 && st.sales_gross > 0 ? (st.wolt_vat * 0.24 / st.sales_gross) * 100 : 0;
+      const tpp = (lpp !== null && fpp !== null) ? (lpp + fpp + wpp).toFixed(1) : null;
       const tCol = tpp ? (parseFloat(tpp) < 50 ? 'var(--green)' : parseFloat(tpp) < 60 ? 'var(--yellow)' : 'var(--red)') : 'var(--yellow)';
       return '<div class="store-card">' +
         '<div class="store-card-name">' + st.name + '</div>' +
@@ -556,6 +595,7 @@ function renderNetwork() {
         '<div class="store-metric"><span>נטו</span><span>' + fmt(sn) + '</span></div>' +
         '<div class="store-metric"><span>שכר</span><span>' + fmt(st.labor) + ' (' + pctStr(st.labor, sn) + ')</span></div>' +
         '<div class="store-metric"><span>מזון</span><span>' + fmt(st.food) + ' (' + pctStr(st.food, sn) + ')</span></div>' +
+        (st.wolt_vat > 0 ? '<div class="store-metric"><span>וולט (24%)</span><span>' + fmt(st.wolt_vat * 0.24) + ' (' + (st.sales_gross > 0 ? ((st.wolt_vat * 0.24 / st.sales_gross) * 100).toFixed(1) + '%' : '—') + ')</span></div>' : '') +
         '<div class="store-total-pct"><span>סה"כ עלויות</span><span style="color:' + tCol + '">' + (tpp ? tpp + '%' : '—') + '</span></div>' +
       '</div>';
     }).join('');
@@ -594,18 +634,21 @@ function applyData(data) {
     STORES.einstein.labor       = data.einstein.labor || 0;
     STORES.einstein.food        = data.einstein.food || 0;
     STORES.einstein.vendors     = Array.isArray(data.einstein.vendors) ? data.einstein.vendors : [];
+    STORES.einstein.wolt_vat    = data.einstein.wolt_vat || 0;
 
     STORES.schuster.sales_gross = data.schuster.sales_vat || 0;
     STORES.schuster.sales_net   = data.schuster.sales_net || 0;
     STORES.schuster.labor       = data.schuster.labor || 0;
     STORES.schuster.food        = data.schuster.food || 0;
     STORES.schuster.vendors     = Array.isArray(data.schuster.vendors) ? data.schuster.vendors : [];
+    STORES.schuster.wolt_vat    = data.schuster.wolt_vat || 0;
 
     STORES.hodash.sales_gross   = data.hodash.sales_vat || 0;
     STORES.hodash.sales_net     = data.hodash.sales_net || 0;
     STORES.hodash.labor         = data.hodash.labor || 0;
     STORES.hodash.food          = data.hodash.food || 0;
     STORES.hodash.vendors       = Array.isArray(data.hodash.vendors) ? data.hodash.vendors : [];
+    STORES.hodash.wolt_vat      = data.hodash.wolt_vat || 0;
 
     const ts = data.last_updated ? new Date(data.last_updated).toLocaleString('he-IL') : '';
     const syncEl = document.getElementById('last-sync-time');
