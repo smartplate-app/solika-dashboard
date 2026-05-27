@@ -178,7 +178,7 @@
 </div>
 
 <!-- NETWORK TAB -->
-<div class="panel" id="panel-network">
+<div class="panel active" id="panel-network">
   <div class="kpi-grid">
     <div class="kpi">
       <div class="kpi-label">מכירות רשת ברוטו</div>
@@ -429,6 +429,7 @@ async function loadDashboard() {
   }
 }
 
+function pctStr(val, base) {
   const p = pct(val, base);
   return p !== null ? p.toFixed(1) + '%' : '—';
 }
