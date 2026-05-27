@@ -435,8 +435,11 @@ function totalColor(p) {
 function showTab(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  if (event && event.target) event.target.classList.add('active');
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  const tabMap = {'network': 0, 'einstein': 1, 'schuster': 2, 'hodash': 3};
+  const tabs = document.querySelectorAll('.tab');
+  if (tabMap[name] !== undefined && tabs[tabMap[name]]) tabs[tabMap[name]].classList.add('active');
 }
 
 // ==================== RENDER ====================
@@ -561,9 +564,9 @@ function renderNetwork() {
 
 function renderAll() {
   renderNetwork();
-  renderStore('ein', STORES.einstein);
-  renderStore('sch', STORES.schuster);
-  renderStore('hod', STORES.hodash);
+  renderStore('e', STORES.einstein);
+  renderStore('s', STORES.schuster);
+  renderStore('h', STORES.hodash);
 }
 
 // ==================== LOAD ====================
