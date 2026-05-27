@@ -384,23 +384,185 @@
 </div>
 
 <script>
-// ==================== DATA ====================
-const ROSA_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/solikaSync';
+// ==================== CONFIG ====================
+const ROSA_URL    = 'https://rosa-6d8ebb9e.base44.app/api/functions/solikaSync';
 const TRIGGER_URL = 'https://rosa-6d8ebb9e.base44.app/api/functions/solikaTriggerSync';
 
-// Default fallback (shown while loading)
+// ==================== DEFAULTS ====================
 let STORES = {
   einstein: { name: 'איינשטיין', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
-  schuster: { name: 'שוסטר', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
-  hodash: { name: 'הוד השרון', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] }
+  schuster:  { name: 'שוסטר',    sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] },
+  hodash:    { name: 'הוד השרון', sales_gross: 0, sales_net: 0, labor: 0, food: 0, vendors: [] }
 };
 
+// ==================== HELPERS ====================
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return '₪' + Math.round(n).toLocaleString('he-IL');
+}
+function pct(val, base) {
+  if (!val || !base || base === 0) return null;
+  return (val / base) * 100;
+}
+function pctStr(val, base) {
+  const p = pct(val, base);
+  return p !== null ? p.toFixed(1) + '%' : '—';
+}
+function colorClass(p) {
+  if (p === null) return '';
+  if (p < 25) return 'green';
+  if (p < 32) return 'yellow';
+  return 'red';
+}
+function totalColor(p) {
+  if (p === null) return '';
+  if (p < 50) return 'green';
+  if (p < 60) return 'yellow';
+  return 'red';
+}
+
+// ==================== TABS ====================
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
+}
+
+// ==================== RENDER ====================
+function renderVendors(containerId, vendors, foodTotal) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!vendors || vendors.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:16px">אין נתוני ספקים</div>';
+    return;
+  }
+  const maxAmt = Math.max(...vendors.map(v => v.net || 0));
+  el.innerHTML = vendors.map(v => {
+    const barPct = maxAmt > 0 ? ((v.net / maxAmt) * 100).toFixed(0) : 0;
+    const foodPct = foodTotal > 0 ? ((v.net / foodTotal) * 100).toFixed(1) : '—';
+    return '<div class="vendor-row">' +
+      '<div class="vendor-name">' + (v.name || '') + '</div>' +
+      '<div class="vendor-bar-wrap"><div class="vendor-bar" style="width:' + barPct + '%"></div></div>' +
+      '<div class="vendor-amt">₪' + Math.round(v.net || 0).toLocaleString('he-IL') + '</div>' +
+      '<div class="vendor-pct">' + foodPct + '%</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderStore(prefix, store) {
+  const sn = store.sales_net;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
+
+  set(prefix + '-sales-gross', fmt(store.sales_gross));
+  set(prefix + '-sales-net', 'נטו: ' + fmt(sn));
+
+  const lp = pct(store.labor, sn);
+  set(prefix + '-labor', fmt(store.labor));
+  setClass(prefix + '-labor', 'kpi-value ' + colorClass(lp));
+  set(prefix + '-labor-pct', pctStr(store.labor, sn) + ' מהמכירות נטו');
+
+  const fp = pct(store.food, sn);
+  set(prefix + '-food', fmt(store.food));
+  setClass(prefix + '-food', 'kpi-value ' + colorClass(fp));
+  set(prefix + '-food-pct', pctStr(store.food, sn) + ' מהמכירות נטו');
+
+  const tp = (lp !== null && fp !== null) ? lp + fp : null;
+  set(prefix + '-total-pct', tp !== null ? tp.toFixed(1) + '%' : '—');
+  setClass(prefix + '-total-pct', 'kpi-value ' + totalColor(tp));
+
+  // cost bars
+  const bar = (id, val) => { const el = document.getElementById(id); if (el) el.style.width = Math.min(val || 0, 70) + '%'; };
+  bar(prefix + '-bar-labor', lp);
+  bar(prefix + '-bar-food', fp);
+  bar(prefix + '-bar-total', tp);
+
+  const setP = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setP(prefix + '-pct-labor', pctStr(store.labor, sn));
+  setP(prefix + '-pct-food', pctStr(store.food, sn));
+  setP(prefix + '-pct-total', tp !== null ? tp.toFixed(1) + '%' : '—');
+  const tpEl = document.getElementById(prefix + '-pct-total');
+  if (tpEl) tpEl.className = 'cost-pct total-pct-value ' + totalColor(tp);
+  setP(prefix + '-amt-labor', fmt(store.labor));
+  setP(prefix + '-amt-food', fmt(store.food));
+
+  renderVendors(prefix + '-vendors', store.vendors, store.food);
+}
+
+function renderNetwork() {
+  const totalSalesGross = Object.values(STORES).reduce((s, st) => s + (st.sales_gross || 0), 0);
+  const totalSalesNet   = Object.values(STORES).reduce((s, st) => s + (st.sales_net || 0), 0);
+  const totalFood       = Object.values(STORES).reduce((s, st) => s + (st.food || 0), 0);
+  const totalLabor      = Object.values(STORES).reduce((s, st) => s + (st.labor || 0), 0);
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
+
+  set('net-sales-gross', fmt(totalSalesGross));
+  set('net-sales-net', 'נטו: ' + fmt(totalSalesNet));
+
+  const lp = pct(totalLabor, totalSalesNet);
+  set('net-labor', fmt(totalLabor));
+  setClass('net-labor', 'kpi-value ' + colorClass(lp));
+  set('net-labor-pct', pctStr(totalLabor, totalSalesNet) + ' מהמכירות נטו');
+
+  const fp = pct(totalFood, totalSalesNet);
+  set('net-food', fmt(totalFood));
+  setClass('net-food', 'kpi-value ' + colorClass(fp));
+  set('net-food-pct', pctStr(totalFood, totalSalesNet) + ' מהמכירות נטו');
+
+  const tp = (lp !== null && fp !== null) ? lp + fp : null;
+  set('net-total-pct', tp !== null ? tp.toFixed(1) + '%' : '—');
+  setClass('net-total-pct', 'kpi-value ' + totalColor(tp));
+
+  set('net-pct-labor', pctStr(totalLabor, totalSalesNet));
+  set('net-amt-labor', fmt(totalLabor));
+  const bl = document.getElementById('net-bar-labor'); if (bl) bl.style.width = Math.min(lp || 0, 70) + '%';
+
+  set('net-pct-food', pctStr(totalFood, totalSalesNet));
+  set('net-amt-food', fmt(totalFood));
+  const bf = document.getElementById('net-bar-food'); if (bf) bf.style.width = Math.min(fp || 0, 70) + '%';
+
+  const tpEl = document.getElementById('net-pct-total');
+  if (tpEl) { tpEl.textContent = tp !== null ? tp.toFixed(1) + '%' : '—'; tpEl.className = 'cost-pct total-pct-value ' + totalColor(tp); }
+  const bt = document.getElementById('net-bar-total'); if (bt) bt.style.width = Math.min(tp || 0, 80) + '%';
+
+  // Store comparison grid
+  const grid = document.getElementById('stores-compare');
+  if (grid) {
+    grid.innerHTML = Object.entries(STORES).map(([key, st]) => {
+      const sn = st.sales_net;
+      const lpp = pct(st.labor, sn);
+      const fpp = pct(st.food, sn);
+      const tpp = (lpp !== null && fpp !== null) ? (lpp + fpp).toFixed(1) : null;
+      const tCol = tpp ? (parseFloat(tpp) < 50 ? 'var(--green)' : parseFloat(tpp) < 60 ? 'var(--yellow)' : 'var(--red)') : 'var(--yellow)';
+      return '<div class="store-card">' +
+        '<div class="store-card-name">' + st.name + '</div>' +
+        '<div class="store-card-sales">' + fmt(st.sales_gross) + '</div>' +
+        '<div class="store-metric"><span>נטו</span><span>' + fmt(sn) + '</span></div>' +
+        '<div class="store-metric"><span>שכר</span><span>' + fmt(st.labor) + ' (' + pctStr(st.labor, sn) + ')</span></div>' +
+        '<div class="store-metric"><span>מזון</span><span>' + fmt(st.food) + ' (' + pctStr(st.food, sn) + ')</span></div>' +
+        '<div class="store-total-pct"><span>סה"כ עלויות</span><span style="color:' + tCol + '">' + (tpp ? tpp + '%' : '—') + '</span></div>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+function renderAll() {
+  renderNetwork();
+  renderStore('ein', STORES.einstein);
+  renderStore('sch', STORES.schuster);
+  renderStore('hod', STORES.hodash);
+}
+
+// ==================== LOAD ====================
 async function loadDashboard() {
   try {
     const res = await fetch(ROSA_URL, { method: 'GET' });
-    if (!res.ok) throw new Error('status ' + res.status);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!data.einstein) throw new Error('no einstein data');
+    if (!data || !data.einstein) throw new Error('no data');
 
     STORES.einstein.sales_gross = data.einstein.sales_vat || 0;
     STORES.einstein.sales_net   = data.einstein.sales_net || 0;
@@ -421,265 +583,71 @@ async function loadDashboard() {
     STORES.hodash.vendors       = Array.isArray(data.hodash.vendors) ? data.hodash.vendors : [];
 
     const ts = data.last_updated ? new Date(data.last_updated).toLocaleString('he-IL') : '';
-    document.getElementById('last-sync-time').textContent = ts ? 'עודכן: ' + ts : 'מאי 2026';
+    const syncEl = document.getElementById('last-sync-time');
+    if (syncEl) syncEl.textContent = ts ? 'עודכן: ' + ts : 'מאי 2026';
+
     renderAll();
   } catch(e) {
     console.error('loadDashboard error:', e);
-    document.getElementById('last-sync-time').textContent = 'שגיאת טעינה';
+    const syncEl = document.getElementById('last-sync-time');
+    if (syncEl) syncEl.textContent = 'שגיאת טעינה — ' + e.message;
   }
 }
 
-function pctStr(val, base) {
-  const p = pct(val, base);
-  return p !== null ? p.toFixed(1) + '%' : '—';
-}
-function colorClass(p) {
-  if (p === null) return '';
-  if (p < 25) return 'green';
-  if (p < 32) return 'yellow';
-  return 'red';
-}
-function totalColor(p) {
-  if (p === null) return '';
-  if (p < 50) return 'green';
-  if (p < 60) return 'yellow';
-  return 'red';
-}
-
-// ==================== RENDER ====================
-function renderVendors(containerId, vendors, foodTotal) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  if (!vendors || vendors.length === 0) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:16px">אין נתוני ספקים</div>';
-    return;
-  }
-  const maxAmt = Math.max(...vendors.map(v => v.net));
-  el.innerHTML = vendors.map(v => {
-    const barPct = maxAmt > 0 ? (v.net / maxAmt * 100).toFixed(0) : 0;
-    const foodPct = foodTotal > 0 ? (v.net / foodTotal * 100).toFixed(1) : '—';
-    return '<div class="vendor-row">' +
-      '<div class="vendor-name">' + v.name + '</div>' +
-      '<div class="vendor-bar-wrap"><div class="vendor-bar" style="width:' + barPct + '%"></div></div>' +
-      '<div class="vendor-amt">₪' + Math.round(v.net).toLocaleString('he-IL') + '</div>' +
-      '<div class="vendor-pct">' + foodPct + '%</div>' +
-    '</div>';
-  }).join('');
-}
-
-function renderStore(prefix, store) {
-  const sn = store.sales_net;
-  const laborPct = pct(store.labor, sn);
-  const foodPct = pct(store.food, sn);
-  const totalPct = (laborPct !== null && foodPct !== null) ? Math.round((laborPct + foodPct) * 10) / 10 : null;
-
-  document.getElementById(prefix + '-sales-gross').textContent = fmt(store.sales_gross);
-  document.getElementById(prefix + '-sales-net').textContent = 'נטו: ' + fmt(sn);
-
-  if (store.labor !== null) {
-    document.getElementById(prefix + '-labor').textContent = fmt(store.labor);
-    document.getElementById(prefix + '-labor').className = 'kpi-value ' + colorClass(laborPct);
-    document.getElementById(prefix + '-labor-pct').textContent = pctStr(store.labor, sn) + ' מהמכירות נטו';
-    document.getElementById(prefix + '-pct-labor').textContent = pctStr(store.labor, sn);
-    document.getElementById(prefix + '-pct-labor').className = 'cost-pct ' + colorClass(laborPct);
-    document.getElementById(prefix + '-amt-labor').textContent = fmt(store.labor);
-    document.getElementById(prefix + '-bar-labor').style.width = Math.min(laborPct || 0, 60) + '%';
-  } else {
-    document.getElementById(prefix + '-labor').textContent = 'ממתין לסנכרון';
-    document.getElementById(prefix + '-labor').className = 'kpi-value yellow';
-    document.getElementById(prefix + '-labor-pct').textContent = 'לחץ סנכרן לעדכון';
-    document.getElementById(prefix + '-pct-labor').textContent = '—';
-    document.getElementById(prefix + '-amt-labor').textContent = '—';
-  }
-
-  document.getElementById(prefix + '-food').textContent = fmt(store.food);
-  document.getElementById(prefix + '-food').className = 'kpi-value ' + colorClass(foodPct);
-  document.getElementById(prefix + '-food-pct').textContent = pctStr(store.food, sn) + ' מהמכירות נטו';
-  document.getElementById(prefix + '-pct-food').textContent = pctStr(store.food, sn);
-  document.getElementById(prefix + '-pct-food').className = 'cost-pct ' + colorClass(foodPct);
-  document.getElementById(prefix + '-amt-food').textContent = fmt(store.food);
-  document.getElementById(prefix + '-bar-food').style.width = Math.min(foodPct || 0, 60) + '%';
-
-  if (totalPct !== null) {
-    document.getElementById(prefix + '-total-pct').textContent = totalPct.toFixed(1) + '%';
-    document.getElementById(prefix + '-total-pct').className = 'kpi-value ' + totalColor(totalPct);
-    document.getElementById(prefix + '-pct-total').textContent = totalPct.toFixed(1) + '%';
-    document.getElementById(prefix + '-pct-total').className = 'cost-pct total-pct-value ' + totalColor(totalPct);
-    document.getElementById(prefix + '-bar-total').style.width = Math.min(totalPct, 80) + '%';
-  } else {
-    document.getElementById(prefix + '-total-pct').textContent = 'חסר שכר';
-    document.getElementById(prefix + '-total-pct').className = 'kpi-value yellow';
-    document.getElementById(prefix + '-pct-total').textContent = '—';
-  }
-
-  // Vendors list
-  renderVendors(prefix + '-vendors', store.vendors, store.food);
-}
-
-function renderNetwork() {
-  const totalSalesGross = Object.values(STORES).reduce((s, st) => s + st.sales_gross, 0);
-  const totalSalesNet = Object.values(STORES).reduce((s, st) => s + st.sales_net, 0);
-  const totalFood = Object.values(STORES).reduce((s, st) => s + (st.food || 0), 0);
-  const hasAllLabor = Object.values(STORES).every(st => st.labor !== null);
-  const totalLabor = hasAllLabor ? Object.values(STORES).reduce((s, st) => s + st.labor, 0) : null;
-
-  document.getElementById('net-sales-gross').textContent = fmt(totalSalesGross);
-  document.getElementById('net-sales-net').textContent = 'נטו: ' + fmt(totalSalesNet);
-
-  const foodPct = pct(totalFood, totalSalesNet);
-  document.getElementById('net-food').textContent = fmt(totalFood);
-  document.getElementById('net-food').className = 'kpi-value ' + colorClass(foodPct);
-  document.getElementById('net-food-pct').textContent = pctStr(totalFood, totalSalesNet) + ' מהמכירות נטו';
-  document.getElementById('net-pct-food').textContent = pctStr(totalFood, totalSalesNet);
-  document.getElementById('net-amt-food').textContent = fmt(totalFood);
-  document.getElementById('net-bar-food').style.width = Math.min(foodPct || 0, 60) + '%';
-
-  if (totalLabor !== null) {
-    const laborPct = pct(totalLabor, totalSalesNet);
-    document.getElementById('net-labor').textContent = fmt(totalLabor);
-    document.getElementById('net-labor').className = 'kpi-value ' + colorClass(laborPct);
-    document.getElementById('net-labor-pct').textContent = pctStr(totalLabor, totalSalesNet) + ' מהמכירות נטו';
-    document.getElementById('net-pct-labor').textContent = pctStr(totalLabor, totalSalesNet);
-    document.getElementById('net-amt-labor').textContent = fmt(totalLabor);
-    document.getElementById('net-bar-labor').style.width = Math.min(laborPct || 0, 60) + '%';
-    const tot = pct(totalLabor + totalFood, totalSalesNet);
-    document.getElementById('net-total-pct').textContent = tot !== null ? tot.toFixed(1) + '%' : '—';
-    document.getElementById('net-total-pct').className = 'kpi-value ' + totalColor(tot);
-    document.getElementById('net-pct-total').textContent = tot !== null ? tot.toFixed(1) + '%' : '—';
-    document.getElementById('net-pct-total').className = 'cost-pct total-pct-value ' + totalColor(tot);
-    document.getElementById('net-bar-total').style.width = Math.min(tot || 0, 80) + '%';
-  } else {
-    document.getElementById('net-labor').textContent = 'ממתין לסנכרון';
-    document.getElementById('net-labor').className = 'kpi-value yellow';
-    document.getElementById('net-labor-pct').textContent = 'לחץ סנכרן';
-    document.getElementById('net-pct-labor').textContent = '—';
-    document.getElementById('net-amt-labor').textContent = '—';
-    document.getElementById('net-total-pct').textContent = 'חסר שכר';
-    document.getElementById('net-total-pct').className = 'kpi-value yellow';
-    document.getElementById('net-pct-total').textContent = '—';
-  }
-
-  // Store comparison grid
-  const grid = document.getElementById('stores-compare');
-  grid.innerHTML = Object.entries(STORES).map(([key, st]) => {
-    const sn = st.sales_net;
-    const lp = pct(st.labor, sn);
-    const fp = pct(st.food, sn);
-    const tp = (lp !== null && fp !== null) ? (lp + fp).toFixed(1) : null;
-    return `
-      <div class="store-card">
-        <div class="store-card-name">${st.name}</div>
-        <div class="store-card-sales">${fmt(st.sales_gross)}</div>
-        <div class="store-metric"><span>נטו</span><span>${fmt(sn)}</span></div>
-        <div class="store-metric"><span>שכר</span><span>${st.labor !== null ? fmt(st.labor) + ' (' + pctStr(st.labor, sn) + ')' : '<span style="color:var(--yellow)">ממתין</span>'}</span></div>
-        <div class="store-metric"><span>מזון</span><span>${fmt(st.food)} (${pctStr(st.food, sn)})</span></div>
-        <div class="store-total-pct">
-          <span>סה"כ עלויות</span>
-          <span style="color:${tp ? (parseFloat(tp) < 50 ? 'var(--green)' : parseFloat(tp) < 60 ? 'var(--yellow)' : 'var(--red)') : 'var(--yellow)'}">${tp ? tp + '%' : '—'}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function renderAll() {
-  renderStore('e', STORES.einstein);
-  renderStore('s', STORES.schuster);
-  renderStore('h', STORES.hodash);
-  renderNetwork();
-  // Activate default tab if none active
-  if (!document.querySelector('.panel.active')) {
-    document.getElementById('panel-network').classList.add('active');
-    const tabs = document.querySelectorAll('.tab');
-    if (tabs.length) tabs[0].classList.add('active');
-  }
-}
-
-// ==================== TABS ====================
-function showTab(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ==================== SYNC ====================
 // ==================== SYNC ====================
 async function triggerSync() {
   const btn = document.getElementById('sync-btn');
+  if (!btn) return;
   btn.classList.add('loading');
-  btn.innerHTML = '<span>⏳</span> מסנכרן...';
+  btn.innerHTML = '<span class="spinner-sm"></span> מסנכרן...';
   try {
     await fetch(TRIGGER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
-    // Poll every 8 seconds for up to 3 minutes
     let attempts = 0;
     const poll = setInterval(async () => {
       attempts++;
       try {
         const r = await fetch(ROSA_URL, { method: 'GET' });
         const d = await r.json();
-        if (d.einstein && d.einstein.sales_vat > 0) {
+        if (d && d.einstein && d.einstein.sales_vat > 0) {
           clearInterval(poll);
-          await loadDashboard();
+          STORES.einstein.sales_gross = d.einstein.sales_vat || 0;
+          STORES.einstein.sales_net   = d.einstein.sales_net || 0;
+          STORES.einstein.labor       = d.einstein.labor || 0;
+          STORES.einstein.food        = d.einstein.food || 0;
+          STORES.schuster.sales_gross = d.schuster.sales_vat || 0;
+          STORES.schuster.sales_net   = d.schuster.sales_net || 0;
+          STORES.schuster.labor       = d.schuster.labor || 0;
+          STORES.schuster.food        = d.schuster.food || 0;
+          STORES.hodash.sales_gross   = d.hodash.sales_vat || 0;
+          STORES.hodash.sales_net     = d.hodash.sales_net || 0;
+          STORES.hodash.labor         = d.hodash.labor || 0;
+          STORES.hodash.food          = d.hodash.food || 0;
+          renderAll();
           btn.classList.remove('loading');
-          btn.innerHTML = '<span>🔄</span> סנכרן';
+          btn.innerHTML = '<span>✅</span> עודכן';
+          setTimeout(() => { btn.innerHTML = '<span>🔄</span> סנכרן'; }, 3000);
         }
-      } catch(_) {}
-      if (attempts > 22) { clearInterval(poll); btn.classList.remove('loading'); btn.innerHTML = '<span>🔄</span> סנכרן'; }
-    }, 8000);
+      } catch(e2) {}
+      if (attempts > 24) {
+        clearInterval(poll);
+        btn.classList.remove('loading');
+        btn.innerHTML = '<span>🔄</span> סנכרן';
+      }
+    }, 5000);
   } catch(e) {
-    showSyncError('לא ניתן להתחבר לשרת.');
     btn.classList.remove('loading');
     btn.innerHTML = '<span>🔄</span> סנכרן';
   }
 }
 
-function showSyncError(msg) {
-  document.getElementById('popup-msg').textContent = msg;
-  document.getElementById('sync-popup').classList.add('show');
+function dismissPopup() {
+  const el = document.getElementById('sync-popup');
+  if (el) el.classList.remove('show');
 }
-function dismissPopup() { document.getElementById('sync-popup').classList.remove('show'); }
 function dismissAndSync() { dismissPopup(); triggerSync(); }
 
-
-// ==================== PAYWALL ====================
-const STORAGE_KEY = 'gr_access_v1';
-const VALID_CODES = ['SOLIKA2026', 'SMARTPLATE'];
-
-function checkPaywall() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved && VALID_CODES.includes(saved)) {
-    document.getElementById('paywall-overlay').classList.remove('show');
-    return true;
-  }
-  showPaywall();
-  return false;
-}
-
-function showPaywall() {
-  document.getElementById('pw-content').innerHTML = `
-    <input class="pw-input" id="pw-code-input" type="password" placeholder="הכנס קוד גישה" autocomplete="off" onkeydown="if(event.key==='Enter')submitCode()">
-    <div class="pw-err" id="pw-err">קוד שגוי, נסה שוב</div>
-    <button class="pw-btn" onclick="submitCode()">כניסה →</button>
-    <hr class="pw-divider">
-    <button class="pw-btn secondary" onclick="window.open('https://wa.me/972525838483','_blank')">📲 בקש גישה ב-WhatsApp</button>
-  `;
-  document.getElementById('paywall-overlay').classList.add('show');
-}
-
-function submitCode() {
-  const val = (document.getElementById('pw-code-input').value || '').trim().toUpperCase();
-  if (VALID_CODES.includes(val)) {
-    localStorage.setItem(STORAGE_KEY, val);
-    document.getElementById('paywall-overlay').classList.remove('show');
-    loadDashboard();
-  } else {
-    document.getElementById('pw-err').style.display = 'block';
-  }
-}
-
-
-loadDashboard();
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', loadDashboard);
 </script>
 </body>
 </html>
