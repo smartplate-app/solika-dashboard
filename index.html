@@ -343,8 +343,8 @@ function inp(id,v){ const e=document.getElementById(id); if(e&&v) e.value=v; }
 function renderMay(){
   const s = S.may;
   const wc = Math.round(s.wolt*0.24);
-  const lp = (s.labor/s.salesVat*100);
-  const fp = (s.food/s.salesVat*100);
+  const lp = (s.labor/s.salesNet*100);
+  const fp = (s.food/s.salesNet*100);
   const wp = (wc/s.salesVat*100);
   const tp = lp+fp+wp;
 
@@ -361,11 +361,11 @@ function renderMay(){
   el('may-k-daily-avg', fmt(s.salesVat/31));
 
   el('may-k-labor', fmt(s.labor));
-  el('may-k-labor-pct', lp.toFixed(1)+'% מברוטו');
+  el('may-k-labor-pct', lp.toFixed(1)+'% מנטו');
   barW('may-bar-labor', lp/50*100);
 
   el('may-k-food', fmt(s.food));
-  el('may-k-food-pct', fp.toFixed(1)+'% מברוטו');
+  el('may-k-food-pct', fp.toFixed(1)+'% מנטו');
   barW('may-bar-food', fp/50*100);
 
   el('may-k-wolt', fmt(wc));
@@ -398,8 +398,8 @@ function renderJun(){
   const s = S.jun;
   const wc = Math.round((s.wolt||0)*0.24);
   const hasData = s.salesVat > 0;
-  const lp = hasData && s.salesVat>0 ? (s.labor||0)/s.salesVat*100 : 0;
-  const fp = hasData && s.salesVat>0 ? (s.food||0)/s.salesVat*100  : 0;
+  const lp = hasData && s.salesNet>0 ? (s.labor||0)/s.salesNet*100 : 0;
+  const fp = hasData && s.salesNet>0 ? (s.food||0)/s.salesNet*100  : 0;
   const wp = hasData && s.salesVat>0 ? wc/s.salesVat*100           : 0;
   const tp = lp+fp+wp;
   const days = new Date().getDate();
@@ -408,7 +408,7 @@ function renderJun(){
   if(hasData){
     heroEl.className = 'hero '+(tp>0?(tp<63?'green':tp<68?'orange':'red'):'gray');
     el('jun-total-pct', tp>0 ? tp.toFixed(1)+'%' : 'MTD');
-    el('jun-hero-sub', 'שכר '+lp.toFixed(1)+'% | מזון '+fp.toFixed(1)+'% | Wolt '+wp.toFixed(1)+'% (מברוטו)');
+    el('jun-hero-sub', 'שכר '+lp.toFixed(1)+'% (נטו) | מזון '+fp.toFixed(1)+'% (נטו) | Wolt '+wp.toFixed(1)+'% (ברוטו)');
     el('jun-hero-emoji', tp>0?(tp<63?'🟢':tp<68?'🟡':'🔴'):'📊');
   } else {
     heroEl.className = 'hero gray';
@@ -424,11 +424,11 @@ function renderJun(){
   el('jun-k-updated', s.lastUpdated ? new Date(s.lastUpdated).toLocaleDateString('he-IL') : '—');
 
   el('jun-k-labor',     (s.labor||0)>0 ? fmt(s.labor) : '—');
-  el('jun-k-labor-pct', lp>0 ? lp.toFixed(1)+'% מברוטו' : 'ממתין');
+  el('jun-k-labor-pct', lp>0 ? lp.toFixed(1)+'% מנטו' : 'ממתין');
   barW('jun-bar-labor', lp/50*100);
 
   el('jun-k-food',     (s.food||0)>0 ? fmt(s.food) : '—');
-  el('jun-k-food-pct', fp>0 ? fp.toFixed(1)+'% מברוטו' : 'ממתין');
+  el('jun-k-food-pct', fp>0 ? fp.toFixed(1)+'% מנטו' : 'ממתין');
   barW('jun-bar-food', fp/50*100);
 
   el('jun-k-wolt',     wc>0 ? fmt(wc) : '—');
