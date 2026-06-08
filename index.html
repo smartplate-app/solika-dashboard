@@ -314,7 +314,7 @@ const S = {
   may: {
     salesVat: 622032, salesNet: 527146,
     labor: 134860.17, food: 197741, wolt: 196973.7,
-    diners: 2680,
+    diners: 0,
     vendors: [
       {name:'חמישה קצבים',net:23590},{name:'מאסטרפוד',net:21477},
       {name:'מילועוף',net:19423},{name:'מ.ר כלים',net:15877},
@@ -472,21 +472,7 @@ function onFoodChange(v) { S.jun.food=parseFloat(v)||0;  renderJun(); }
 function onSalesChange(v){ S.jun.salesVat=parseFloat(v)||0; S.jun.salesNet=Math.round(S.jun.salesVat/1.18); renderJun(); }
 
 async function loadFromRosa(){
-  // Load MAY data
-  try {
-    const r = await fetch(ROSA+'/solikaSync?month=2026-05', {cache:'no-store'});
-    if(r.ok){
-      const raw = await r.json();
-      const d = raw.einstein || {};
-      if(d.sales_vat)   S.may.salesVat    = d.sales_vat;
-      if(d.sales_net)   S.may.salesNet    = d.sales_net;
-      if(d.labor)       S.may.labor       = d.labor;
-      if(d.food)        S.may.food        = d.food;
-      if(d.wolt_vat)    S.may.wolt        = d.wolt_vat;
-      if(raw.last_updated) S.may.lastUpdated = raw.last_updated;
-      if(d.vendors && d.vendors.length)   S.may.vendors = d.vendors;
-    }
-  } catch(e){}
+  // May data is pre-loaded in state (solikaSync doesn't support month param)
 
   // Load JUNE data
   try {
