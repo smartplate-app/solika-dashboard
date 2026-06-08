@@ -199,12 +199,12 @@ window.__STATIC_DATA__ = {
     <div class="kpi">
       <div class="kpi-label">שכר כולל</div>
       <div class="kpi-value" id="net-labor">—</div>
-      <div class="kpi-sub" id="net-labor-pct">— מהמכירות נטו</div>
+      <div class="kpi-sub" id="net-labor-pct">— מהמכירות ברוטו</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">עלות מזון כוללת</div>
       <div class="kpi-value" id="net-food">—</div>
-      <div class="kpi-sub" id="net-food-pct">— מהמכירות נטו</div>
+      <div class="kpi-sub" id="net-food-pct">— מהמכירות ברוטו</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">סה"כ עלויות</div>
@@ -450,8 +450,8 @@ function colorClass(p) {
 }
 function totalColor(p) {
   if (p === null) return '';
-  if (p < 50) return 'green';
-  if (p < 60) return 'yellow';
+  if (p < 63) return 'green';
+  if (p < 70) return 'yellow';
   return 'red';
 }
 
@@ -488,7 +488,7 @@ function renderVendors(containerId, vendors, foodTotal) {
 }
 
 function renderStore(prefix, store) {
-  const sn = store.sales_net;
+  const sn = store.sales_gross; // ⚠️ ALL % from GROSS (VAT included) — rule 2026-06-09
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
 
@@ -498,12 +498,12 @@ function renderStore(prefix, store) {
   const lp = pct(store.labor, sn);
   set(prefix + '-labor', fmt(store.labor));
   setClass(prefix + '-labor', 'kpi-value ' + colorClass(lp));
-  set(prefix + '-labor-pct', pctStr(store.labor, sn) + ' מהמכירות נטו');
+  set(prefix + '-labor-pct', pctStr(store.labor, sn) + ' מהמכירות ברוטו');
 
   const fp = pct(store.food, sn);
   set(prefix + '-food', fmt(store.food));
   setClass(prefix + '-food', 'kpi-value ' + colorClass(fp));
-  set(prefix + '-food-pct', pctStr(store.food, sn) + ' מהמכירות נטו');
+  set(prefix + '-food-pct', pctStr(store.food, sn) + ' מהמכירות ברוטו');
 
   // Wolt: fee = wolt_sales * 24%, pct is from GROSS sales
   const woltFee = (store.wolt_vat || 0) * 0.24;
@@ -549,25 +549,25 @@ function renderNetwork() {
   set('net-sales-gross', fmt(totalSalesGross));
   set('net-sales-net', 'נטו: ' + fmt(totalSalesNet));
 
-  const lp = pct(totalLabor, totalSalesNet);
+  const lp = pct(totalLabor, totalSalesGross); // from gross
   set('net-labor', fmt(totalLabor));
   setClass('net-labor', 'kpi-value ' + colorClass(lp));
-  set('net-labor-pct', pctStr(totalLabor, totalSalesNet) + ' מהמכירות נטו');
+  set('net-labor-pct', pctStr(totalLabor, totalSalesGross) + ' מהמכירות ברוטו');
 
-  const fp = pct(totalFood, totalSalesNet);
+  const fp = pct(totalFood, totalSalesGross); // from gross
   set('net-food', fmt(totalFood));
   setClass('net-food', 'kpi-value ' + colorClass(fp));
-  set('net-food-pct', pctStr(totalFood, totalSalesNet) + ' מהמכירות נטו');
+  set('net-food-pct', pctStr(totalFood, totalSalesGross) + ' מהמכירות ברוטו');
 
   const tp = (lp !== null && fp !== null) ? lp + fp + (woltNetPct || 0) : null;
   set('net-total-pct', tp !== null ? tp.toFixed(1) + '%' : '—');
   setClass('net-total-pct', 'kpi-value ' + totalColor(tp));
 
-  set('net-pct-labor', pctStr(totalLabor, totalSalesNet));
+  set('net-pct-labor', pctStr(totalLabor, totalSalesGross));
   set('net-amt-labor', fmt(totalLabor));
   const bl = document.getElementById('net-bar-labor'); if (bl) bl.style.width = Math.min(lp || 0, 70) + '%';
 
-  set('net-pct-food', pctStr(totalFood, totalSalesNet));
+  set('net-pct-food', pctStr(totalFood, totalSalesGross));
   set('net-amt-food', fmt(totalFood));
   const bf = document.getElementById('net-bar-food'); if (bf) bf.style.width = Math.min(fp || 0, 70) + '%';
 
@@ -583,7 +583,7 @@ function renderNetwork() {
   const grid = document.getElementById('stores-compare');
   if (grid) {
     grid.innerHTML = Object.entries(STORES).map(([key, st]) => {
-      const sn = st.sales_net;
+      const sn = st.sales_gross; // from gross
       const lpp = pct(st.labor, sn);
       const fpp = pct(st.food, sn);
       const wpp = st.wolt_vat > 0 && st.sales_gross > 0 ? (st.wolt_vat * 0.24 / st.sales_gross) * 100 : 0;
