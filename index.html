@@ -281,12 +281,12 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
 
   <!-- TABS -->
   <div class="tabs-bar">
-    <button class="tab-btn active" id="tab-jun" onclick="switchTab('jun')">יוני 2026 — MTD</button>
-    <button class="tab-btn" id="tab-may" onclick="switchTab('may')">מאי 2026</button>
+    <button class="tab-btn active" id="tab-jul" onclick="switchTab('jul')">יולי 2026 — MTD</button>
+    <button class="tab-btn" id="tab-jul" onclick="switchTab('jul')">יוני 2026</button>
   </div>
 
   <!-- JUNE PANE -->
-  <div class="tab-pane active" id="pane-jun">
+  <div class="tab-pane active" id="pane-jul">
     <div class="container">
 
       <div class="hero gray" id="jun-hero">
@@ -333,7 +333,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       </div>
 
       <div class="section">
-        <div class="s-title">הכנסת נתונים ידנית — יוני</div>
+        <div class="s-title">הכנסת נתונים ידנית — יולי</div>
         <div class="edit-row">
           <div class="l">שכר עבודה (₪ נטו)</div>
           <input class="edt" id="jun-labor-input" type="number" placeholder="הכנס סכום" oninput="onLaborChange(this.value)">
@@ -353,7 +353,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       </div>
 
       <div class="section">
-        <div class="s-title">פירוט עלויות — יוני</div>
+        <div class="s-title">פירוט עלויות — יולי</div>
         <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="jun-cr-labor">—</div></div>
         <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="jun-cr-food">—</div></div>
         <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="jun-cr-wolt-comm">—</div></div>
@@ -361,7 +361,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       </div>
 
       <div class="section">
-        <div class="s-title">Wolt — יוני</div>
+        <div class="s-title">Wolt — יולי</div>
         <div class="wolt-card">
           <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="jun-wolt-sales">—</div></div>
           <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="jun-wolt-commission">—</div></div>
@@ -371,7 +371,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
 
 
       <div class="section">
-        <div class="s-title">📦 ניתוח ספקים — יוני vs מאי (לפי יומי ממוצע)</div>
+        <div class="s-title">📦 ניתוח ספקים — יולי vs יוני (לפי יומי ממוצע)</div>
         <div id="jun-sup-compare"><div class="sup-cmp-hdr">
 <div>ספק</div>
 <div style="text-align:center">מאי/יום</div>
@@ -498,16 +498,16 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
 <span>🟠 +15% עד +40%</span>
 <span>🟢 ירידה</span>
 <span>⚪ יציב</span>
-<span style="margin-right:auto">מאי=31 ימים | יוני=17 ימים (MTD)</span>
+<span style="margin-right:auto">יוני=30 ימים | יולי=7 ימים (MTD)</span>
 </div></div>
       </div>
-      <div class="note-box">יוני 2026 בתהליך — נתוני שכר ומזון יתעדכנו אוטומטית עם הסנכרון היומי</div>
+      <div class="note-box">יולי 2026 בתהליך — נתוני שכר ומזון יתעדכנו אוטומטית עם הסנכרון היומי</div>
       <div class="last-upd" id="jun-last-upd"></div>
     </div>
   </div>
 
   <!-- MAY PANE -->
-  <div class="tab-pane" id="pane-may">
+  <div class="tab-pane" id="pane-jun">
     <div class="container">
 
       <div class="hero green" id="may-hero">
@@ -554,7 +554,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       </div>
 
       <div class="section">
-        <div class="s-title">פירוט עלויות — מאי</div>
+        <div class="s-title">פירוט עלויות — יוני</div>
         <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="may-cr-labor">—</div></div>
         <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="may-cr-food">—</div></div>
         <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="may-cr-wolt-comm">—</div></div>
@@ -562,7 +562,7 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       </div>
 
       <div class="section">
-        <div class="s-title">Wolt — מאי</div>
+        <div class="s-title">Wolt — יוני</div>
         <div class="wolt-card">
           <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="may-wolt-sales">—</div></div>
           <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="may-wolt-commission">—</div></div>
@@ -586,26 +586,20 @@ const ROSA  = 'https://rosa-6d8ebb9e.base44.app/api/functions';
 
 // State — pre-loaded with confirmed entity data
 const S = {
-  may: {
-    salesVat: 622032, salesNet: 527146,
-    labor: 134860.17, food: 197741, wolt: 196973.7,
-    vendors: [
-      {name:'חמישה קצבים',net:23590},{name:'מאסטרפוד',net:21477},
-      {name:'מילועוף',net:19423},{name:'מ.ר כלים',net:15877},
-      {name:'אחים כהן',net:8543},{name:'י.שבי שיווק',net:8191},
-      {name:'אהרון שיווק',net:7503},{name:'זטופאק לחם',net:6079},
-      {name:'א. ביסקוטי',net:5999},{name:'חמים וטעים',net:5082}
-    ],
-    lastUpdated: '2026-06-02T00:10:00'
-  },
+  
   jun: {
-    salesVat: 300495, salesNet: 254657,
-    labor: 75579, food: 128604.55, wolt: 101101,
-    lastUpdated: '2026-06-17T22:30:00'
+    salesVat: 494639, salesNet: 419185,
+    labor: 120485, food: 181200, wolt: 165000,
+    lastUpdated: '2026-06-30T23:59:00'
+  },
+  jul: {
+    salesVat: 120111, salesNet: 101789,
+    labor: 25465.5, food: 0, wolt: 40688.9,
+    lastUpdated: '2026-07-07T04:29:09'
   }
 };
 
-let activeTab = 'jun';
+let activeTab = 'jul';
 
 function fmt(n){ return n>=1000?'₪'+(n/1000).toFixed(1)+'K':'₪'+Math.round(n).toLocaleString('he-IL'); }
 function fmtFull(n){ return '₪'+Math.round(n).toLocaleString('he-IL'); }
