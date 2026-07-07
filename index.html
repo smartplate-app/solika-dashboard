@@ -104,150 +104,25 @@ body { font-family: system-ui, -apple-system, sans-serif; background:#0d0d1a; co
 .note-box { background:rgba(167,139,250,0.07); border:1px dashed rgba(167,139,250,0.2); border-radius:12px; padding:14px; margin-bottom:12px; font-size:11px; color:rgba(255,255,255,0.4); text-align:center; line-height:1.8; }
 .last-upd { font-size:10px; color:rgba(255,255,255,0.2); text-align:center; padding:10px 0 4px; }
 
-/* SUPPLIER COMPARISON TABLE */
-.sup-cmp-title { font-size:11px; font-weight:800; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.07); }
-.sup-cmp-hdr { display:grid; grid-template-columns:1fr 70px 70px 60px; gap:4px; padding:6px 10px; font-size:9px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.8px; }
-.sup-cmp-row { display:grid; grid-template-columns:1fr 70px 70px 60px; gap:4px; padding:8px 10px; border-radius:8px; margin-bottom:4px; align-items:center; background:rgba(255,255,255,0.03); }
-.sup-cmp-row.red-row { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.15); }
-.sup-cmp-row.orange-row { background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.12); }
-.sup-cmp-row.green-row { background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.1); }
-.sup-cmp-name { font-size:11px; color:rgba(255,255,255,0.8); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.sup-cmp-val { font-size:11px; font-weight:700; color:white; text-align:center; }
-.sup-cmp-val.muted { color:rgba(255,255,255,0.4); font-weight:400; }
-.sup-cmp-badge { font-size:10px; font-weight:800; text-align:center; border-radius:6px; padding:3px 6px; }
-.sup-cmp-badge.red { color:#ef4444; background:rgba(239,68,68,0.12); }
-.sup-cmp-badge.orange { color:#f97316; background:rgba(249,115,22,0.12); }
-.sup-cmp-badge.green { color:#22c55e; background:rgba(34,197,94,0.1); }
-.sup-cmp-badge.white { color:rgba(255,255,255,0.4); }
-.sup-cmp-legend { display:flex; gap:12px; margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); font-size:9px; color:rgba(255,255,255,0.3); }
-
-
-/* LIGHT MODE — Gray/Neutral, no purple */
-body.light { background:#f4f4f6; color:#1a1a2e; }
-
-/* Paywall */
-body.light #paywall { background:#f4f4f6; }
-body.light .pw-box { background:#ffffff; border-color:rgba(0,0,0,0.1); }
-body.light .pw-title { color:#1a1a2e; }
-body.light .pw-branch { color:#555; }
-body.light .pw-sub { color:rgba(0,0,0,0.4); }
-body.light .pw-input { background:rgba(0,0,0,0.05); border-color:rgba(0,0,0,0.15); color:#1a1a2e; }
-body.light .pw-input:focus { border-color:#888; }
-body.light .pw-btn { background:linear-gradient(135deg,#444,#222); }
-body.light .pw-err { color:#dc2626; }
-
-/* Header */
-body.light .header { background:#ffffff; border-bottom:1px solid rgba(0,0,0,0.08); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-body.light .h-branch { color:#1a1a2e; }
-body.light .h-branch span { color:#374151 !important; }
-body.light .h-month { color:rgba(0,0,0,0.4); }
-body.light .sync-btn { background:#374151 !important; color:#fff; }
-
-/* Tabs */
-body.light .tabs-bar { background:#ffffff; border-bottom:1px solid rgba(0,0,0,0.08); }
-body.light .tab-btn { color:rgba(0,0,0,0.35); background:transparent; }
-body.light .tab-btn.active { color:#1a1a2e !important; border-bottom:3px solid #374151 !important; background:rgba(0,0,0,0.04) !important; }
-
-/* KPI cards */
-body.light .kpi { background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.07); }
-body.light .kpi.purple { border-top-color:#6b7280; }
-body.light .kpi.violet { border-top-color:#9ca3af; }
-body.light .kpi.cyan   { border-top-color:#06b6d4; }
-body.light .kpi.green  { border-top-color:#10b981; }
-body.light .kpi.yellow { border-top-color:#f59e0b; }
-body.light .kpi.red    { border-top-color:#ef4444; }
-body.light .kpi.orange { border-top-color:#ff6b35; }
-body.light .kpi.indigo { border-top-color:#6b7280; }
-body.light .kpi-lbl { color:rgba(0,0,0,0.35); }
-body.light .kpi-val { color:#1a1a2e; }
-body.light .kpi-sub { color:rgba(0,0,0,0.3); }
-body.light .bar { background:rgba(0,0,0,0.08); }
-body.light .bf.p { background:#6b7280; }
-
-/* Sections */
-body.light .section { background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
-body.light .s-title { color:rgba(0,0,0,0.3); }
-body.light .cr { background:rgba(0,0,0,0.03); }
-body.light .cr.total-row { background:rgba(55,65,81,0.08); }
-body.light .cr .l { color:rgba(0,0,0,0.6); }
-body.light .cr .src { color:rgba(0,0,0,0.25); }
-body.light .cr .v { color:#1a1a2e; }
-body.light .cr.total-row .l { color:#1a1a2e; font-weight:700; }
-body.light .cr.total-row .v { color:#374151 !important; font-size:16px; }
-
-/* Suppliers */
-body.light .sup-box { background:rgba(0,0,0,0.04); }
-body.light .sup-box .sv { color:#1a1a2e; }
-body.light .sup-box .sl { color:rgba(0,0,0,0.4); }
-body.light .sup-box .sc { color:rgba(0,0,0,0.25); }
-
-/* Wolt */
-body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,107,53,0.2); }
-
-/* Edit inputs */
-body.light .edit-row { background:rgba(0,0,0,0.03); }
-body.light .edit-row .l { color:rgba(0,0,0,0.6); }
-body.light .edt { background:rgba(0,0,0,0.05); border-color:rgba(0,0,0,0.2); color:#1a1a2e; }
-body.light .edt:focus { border-color:#374151; background:rgba(0,0,0,0.07); }
-
-/* Note / last updated */
-body.light .note-box { background:rgba(0,0,0,0.03); border-color:rgba(0,0,0,0.1); color:rgba(0,0,0,0.45); }
-body.light .last-upd { color:rgba(0,0,0,0.25); }
-
-/* Supplier comparison */
-body.light .sup-cmp-title { color:rgba(0,0,0,0.4); border-bottom-color:rgba(0,0,0,0.07); }
-body.light .sup-cmp-hdr { color:rgba(0,0,0,0.3); }
-body.light .sup-cmp-row { background:rgba(0,0,0,0.03); }
-body.light .sup-cmp-row.red-row { background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.15); }
-body.light .sup-cmp-row.orange-row { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.12); }
-body.light .sup-cmp-row.green-row { background:rgba(34,197,94,0.04); border-color:rgba(34,197,94,0.1); }
-body.light .sup-cmp-name { color:rgba(0,0,0,0.8); }
-body.light .sup-cmp-val { color:#1a1a2e; }
-body.light .sup-cmp-val.muted { color:rgba(0,0,0,0.4); }
-body.light .sup-cmp-legend { color:rgba(0,0,0,0.3); border-top-color:rgba(0,0,0,0.06); }
-body.light .tab-btn { color:rgba(0,0,0,0.35); }
-body.light .tab-btn.active { color:#1a1a2e; background:rgba(14,165,233,0.08); border-bottom-color:#0ea5e9 !important; }
-body.light .kpi { background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
-body.light .kpi.purple { border-top-color:#0ea5e9; }
-body.light .kpi.violet { border-top-color:#38bdf8; }
-body.light .kpi.indigo { border-top-color:#0284c7; }
-body.light .kpi-lbl { color:rgba(0,0,0,0.35); }
-body.light .kpi-val { color:#1a1a2e; }
-body.light .kpi-sub { color:rgba(0,0,0,0.3); }
-body.light .section { background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
-body.light .s-title { color:rgba(0,0,0,0.3); }
-body.light .cr { background:rgba(0,0,0,0.03); }
-body.light .cr.total-row { background:rgba(14,165,233,0.08); }
-body.light .cr .l { color:rgba(0,0,0,0.6); }
-body.light .cr .src { color:rgba(0,0,0,0.25); }
-body.light .cr .v { color:#1a1a2e; }
-body.light .cr.total-row .l { color:#0369a1; }
-body.light .sup-box { background:rgba(0,0,0,0.04); }
-body.light .sup-box .sv { color:#1a1a2e; }
-body.light .sup-box .sl { color:rgba(0,0,0,0.4); }
-body.light .sup-box .sc { color:rgba(0,0,0,0.25); }
-body.light .note-box { background:rgba(14,165,233,0.05); border-color:rgba(14,165,233,0.15); color:rgba(0,0,0,0.45); }
-body.light .last-upd { color:rgba(0,0,0,0.25); }
-body.light .edit-row { background:rgba(0,0,0,0.03); }
-body.light .edit-row .l { color:rgba(0,0,0,0.6); }
-body.light .edt { background:rgba(0,0,0,0.05); border-color:rgba(14,165,233,0.4); color:#1a1a2e; }
-body.light .sup-cmp-hdr { color:rgba(0,0,0,0.3); }
-body.light .sup-cmp-row { background:rgba(0,0,0,0.03); }
-body.light .sup-cmp-row.red-row { background:rgba(239,68,68,0.06); }
-body.light .sup-cmp-row.orange-row { background:rgba(249,115,22,0.06); }
-body.light .sup-cmp-row.green-row { background:rgba(34,197,94,0.04); }
-body.light .sup-cmp-name { color:rgba(0,0,0,0.8); }
-body.light .sup-cmp-val { color:#1a1a2e; }
-body.light .sup-cmp-val.muted { color:rgba(0,0,0,0.4); }
-body.light .sup-cmp-legend { color:rgba(0,0,0,0.3); border-top-color:rgba(0,0,0,0.06); }
-body.light .bar { background:rgba(0,0,0,0.08); }
-body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,107,53,0.2); }
-
+/* SYNC OVERLAY */
+#sync-overlay { position:fixed; inset:0; background:rgba(13,13,26,0.85); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:99999; flex-direction:column; }
+.spinner { width:40px; height:40px; border:4px solid rgba(255,255,255,0.1); border-top-color:#a78bfa; border-radius:50%; animation:spin 1s linear infinite; margin-bottom:16px; }
+@keyframes spin { 100% { transform:rotate(360deg); } }
+.sync-text { font-size:16px; font-weight:700; color:white; margin-bottom:8px; }
+.sync-sub { font-size:12px; color:rgba(255,255,255,0.5); }
 </style>
+
 </head>
 <body>
 
+
+<div id="sync-overlay">
+  <div class="spinner"></div>
+  <div class="sync-text">מסנכרן נתונים...</div>
+  <div class="sync-sub">מושך נתונים מ-Tabit ו-Zester</div>
+</div>
 <!-- PAYWALL -->
+
 <div id="paywall">
   <div class="pw-box">
     <div class="pw-logo">
@@ -270,65 +145,62 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
       <img class="h-logo-img" src="https://base44.app/api/apps/69b697029d0cd0fecb49189b/files/mp/public/69b697029d0cd0fecb49189b/a23d2203a_6963469c6_smartplate_logo_insta_320x320px.png" alt="SP" onerror="this.style.display='none'">
       <div>
         <div class="h-branch">Solika <span>Einstein</span></div>
-        <div class="h-month" id="h-month">יוני 2026 — MTD</div>
+        <div class="h-month" id="h-month">יולי 2026 — MTD</div>
       </div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-    <button class="sync-btn" id="theme-btn" onclick="toggleTheme()" style="background:#6d28d9;">☀️ מצב יום</button>
     <button class="sync-btn" onclick="triggerSync()">🔄 סנכרן</button>
-  </div>
   </div>
 
   <!-- TABS -->
   <div class="tabs-bar">
     <button class="tab-btn active" id="tab-jul" onclick="switchTab('jul')">יולי 2026 — MTD</button>
-    <button class="tab-btn" id="tab-jul" onclick="switchTab('jul')">יוני 2026</button>
+    <button class="tab-btn" id="tab-__JUN__" onclick="switchTab('__JUN__')">יוני 2026</button>
   </div>
 
-  <!-- JUNE PANE -->
+  <!-- JULE PANE -->
   <div class="tab-pane active" id="pane-jul">
     <div class="container">
 
-      <div class="hero gray" id="jun-hero">
+      <div class="hero gray" id="jul-hero">
         <div>
           <div class="lbl">סה"כ עלויות מתוך מכירות נטו</div>
-          <div class="big" id="jun-total-pct">—</div>
-          <div class="sub" id="jun-hero-sub">ממתין לנתונים</div>
+          <div class="big" id="jul-total-pct">—</div>
+          <div class="sub" id="jul-hero-sub">ממתין לנתונים</div>
         </div>
-        <div style="font-size:36px" id="jun-hero-emoji">⏳</div>
+        <div style="font-size:36px" id="jul-hero-emoji">⏳</div>
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi purple"><div class="kpi-lbl">מכירות ברוטו</div><div class="kpi-val" id="jun-k-sales-vat">—</div><div class="kpi-sub">כולל מע"מ</div></div>
-        <div class="kpi violet"><div class="kpi-lbl">מכירות נטו</div><div class="kpi-val" id="jun-k-sales-net">—</div><div class="kpi-sub">ללא מע"מ</div></div>
-        <div class="kpi cyan"><div class="kpi-lbl">ממוצע יומי</div><div class="kpi-val" id="jun-k-daily-avg">—</div><div class="kpi-sub" id="jun-k-days-sub">מתוך 30 ימים</div></div>
-        <div class="kpi green"><div class="kpi-lbl">עודכן</div><div class="kpi-val" style="font-size:12px;" id="jun-k-updated">—</div><div class="kpi-sub">עדכון אחרון</div></div>
+        <div class="kpi purple"><div class="kpi-lbl">מכירות ברוטו</div><div class="kpi-val" id="jul-k-sales-vat">—</div><div class="kpi-sub">כולל מע"מ</div></div>
+        <div class="kpi violet"><div class="kpi-lbl">מכירות נטו</div><div class="kpi-val" id="jul-k-sales-net">—</div><div class="kpi-sub">ללא מע"מ</div></div>
+        <div class="kpi cyan"><div class="kpi-lbl">ימים</div><div class="kpi-val" id="jul-k-days">—</div><div class="kpi-sub" id="jul-k-avg">ממוצע יומי</div></div>
+        <div class="kpi green"><div class="kpi-lbl">עודכן</div><div class="kpi-val" style="font-size:12px;" id="jul-k-updated">—</div><div class="kpi-sub">עדכון אחרון</div></div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi yellow">
           <div class="kpi-lbl">שכר עבודה</div>
-          <div class="kpi-val" id="jun-k-labor">—</div>
-          <div class="kpi-sub" id="jun-k-labor-pct">ממתין</div>
-          <div class="bar"><div class="bf o" id="jun-bar-labor" style="width:0%"></div></div>
+          <div class="kpi-val" id="jul-k-labor">—</div>
+          <div class="kpi-sub" id="jul-k-labor-pct">ממתין</div>
+          <div class="bar"><div class="bf o" id="jul-bar-labor" style="width:0%"></div></div>
         </div>
         <div class="kpi red">
           <div class="kpi-lbl">עלות מזון</div>
-          <div class="kpi-val" id="jun-k-food">—</div>
-          <div class="kpi-sub" id="jun-k-food-pct">ממתין</div>
-          <div class="bar"><div class="bf r" id="jun-bar-food" style="width:0%"></div></div>
+          <div class="kpi-val" id="jul-k-food">—</div>
+          <div class="kpi-sub" id="jul-k-food-pct">ממתין</div>
+          <div class="bar"><div class="bf r" id="jul-bar-food" style="width:0%"></div></div>
         </div>
         <div class="kpi orange">
           <div class="kpi-lbl">Wolt (עמלה 24%)</div>
-          <div class="kpi-val" id="jun-k-wolt">—</div>
-          <div class="kpi-sub" id="jun-k-wolt-pct">ממתין</div>
-          <div class="bar"><div class="bf w" id="jun-bar-wolt" style="width:0%"></div></div>
+          <div class="kpi-val" id="jul-k-wolt">—</div>
+          <div class="kpi-sub" id="jul-k-wolt-pct">ממתין</div>
+          <div class="bar"><div class="bf w" id="jul-bar-wolt" style="width:0%"></div></div>
         </div>
         <div class="kpi indigo">
           <div class="kpi-lbl">סה"כ עלויות</div>
-          <div class="kpi-val" id="jun-k-total-pct">—</div>
+          <div class="kpi-val" id="jul-k-total-pct">—</div>
           <div class="kpi-sub">יעד: מתחת ל-63%</div>
-          <div class="bar"><div class="bf p" id="jun-bar-total" style="width:0%"></div></div>
+          <div class="bar"><div class="bf p" id="jul-bar-total" style="width:0%"></div></div>
         </div>
       </div>
 
@@ -336,246 +208,114 @@ body.light .wolt-card { background:rgba(255,107,53,0.06); border-color:rgba(255,
         <div class="s-title">הכנסת נתונים ידנית — יולי</div>
         <div class="edit-row">
           <div class="l">שכר עבודה (₪ נטו)</div>
-          <input class="edt" id="jun-labor-input" type="number" placeholder="הכנס סכום" oninput="onLaborChange(this.value)">
+          <input class="edt" id="jul-labor-input" type="number" placeholder="הכנס סכום" oninput="onLaborChange(this.value)">
         </div>
         <div class="edit-row">
           <div class="l">מכירות Wolt (₪ ברוטו)</div>
-          <input class="edt" id="jun-wolt-input" type="number" placeholder="הכנס סכום" oninput="onWoltChange(this.value)">
+          <input class="edt" id="jul-wolt-input" type="number" placeholder="הכנס סכום" oninput="onWoltChange(this.value)">
         </div>
         <div class="edit-row">
           <div class="l">עלות מזון (₪ נטו)</div>
-          <input class="edt" id="jun-food-input" type="number" placeholder="הכנס סכום" oninput="onFoodChange(this.value)">
+          <input class="edt" id="jul-food-input" type="number" placeholder="הכנס סכום" oninput="onFoodChange(this.value)">
         </div>
         <div class="edit-row">
           <div class="l">מכירות ברוטו (₪)</div>
-          <input class="edt" id="jun-sales-input" type="number" placeholder="הכנס סכום" oninput="onSalesChange(this.value)">
+          <input class="edt" id="jul-sales-input" type="number" placeholder="הכנס סכום" oninput="onSalesChange(this.value)">
         </div>
       </div>
 
       <div class="section">
         <div class="s-title">פירוט עלויות — יולי</div>
-        <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="jun-cr-labor">—</div></div>
-        <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="jun-cr-food">—</div></div>
-        <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="jun-cr-wolt-comm">—</div></div>
-        <div class="cr total-row"><div class="l">סה"כ עלויות</div><div class="v" id="jun-cr-total">—</div></div>
+        <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="jul-cr-labor">—</div></div>
+        <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="jul-cr-food">—</div></div>
+        <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="jul-cr-wolt-comm">—</div></div>
+        <div class="cr total-row"><div class="l">סה"כ עלויות</div><div class="v" id="jul-cr-total">—</div></div>
       </div>
 
       <div class="section">
         <div class="s-title">Wolt — יולי</div>
         <div class="wolt-card">
-          <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="jun-wolt-sales">—</div></div>
-          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="jun-wolt-commission">—</div></div>
-          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">אחוז מסה"כ מכירות</div><div class="v" id="jun-wolt-pct-of-sales">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="jul-wolt-sales">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="jul-wolt-commission">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">אחוז מסה"כ מכירות</div><div class="v" id="jul-wolt-pct-of-sales">—</div></div>
         </div>
       </div>
 
-
-      <div class="section">
-        <div class="s-title">📦 ניתוח ספקים — יולי vs יוני (לפי יומי ממוצע)</div>
-        <div id="jun-sup-compare"><div class="sup-cmp-hdr">
-<div>ספק</div>
-<div style="text-align:center">מאי/יום</div>
-<div style="text-align:center">יוני/יום</div>
-<div style="text-align:center">שינוי</div>
-</div>
-<div class="sup-cmp-row orange-row">
-<div class="sup-cmp-name">🟠 מאסטרפוד</div>
-<div class="sup-cmp-val muted">₪692</div>
-<div class="sup-cmp-val">₪891</div>
-<div class="sup-cmp-badge orange">+29%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 מ.ר כלים</div>
-<div class="sup-cmp-val muted">₪512</div>
-<div class="sup-cmp-val">₪856</div>
-<div class="sup-cmp-badge red">+67%</div>
-</div>
-<div class="sup-cmp-row ">
-<div class="sup-cmp-name">⚪ חמישה קצבים</div>
-<div class="sup-cmp-val muted">₪760</div>
-<div class="sup-cmp-val">₪831</div>
-<div class="sup-cmp-badge white">+9%</div>
-</div>
-<div class="sup-cmp-row ">
-<div class="sup-cmp-name">⚪ מילועוף</div>
-<div class="sup-cmp-val muted">₪626</div>
-<div class="sup-cmp-val">₪590</div>
-<div class="sup-cmp-badge white">-6%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 י.שבי שיווק</div>
-<div class="sup-cmp-val muted">₪264</div>
-<div class="sup-cmp-val">₪422</div>
-<div class="sup-cmp-badge red">+60%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 חמים וטעים</div>
-<div class="sup-cmp-val muted">₪163</div>
-<div class="sup-cmp-val">₪412</div>
-<div class="sup-cmp-badge red">+152%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 אהרון שיווק</div>
-<div class="sup-cmp-val muted">₪242</div>
-<div class="sup-cmp-val">₪373</div>
-<div class="sup-cmp-badge red">+54%</div>
-</div>
-<div class="sup-cmp-row orange-row">
-<div class="sup-cmp-name">🟠 אחים כהן</div>
-<div class="sup-cmp-val muted">₪275</div>
-<div class="sup-cmp-val">₪367</div>
-<div class="sup-cmp-badge orange">+34%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 ג.י אשכול</div>
-<div class="sup-cmp-val muted">₪190</div>
-<div class="sup-cmp-val">₪348</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 עונות ישראל</div>
-<div class="sup-cmp-val muted">₪156</div>
-<div class="sup-cmp-val">₪284</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 א. ביסקוטי</div>
-<div class="sup-cmp-val muted">₪126</div>
-<div class="sup-cmp-val">₪229</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 א.מ.א קייטרינג</div>
-<div class="sup-cmp-val muted">₪115</div>
-<div class="sup-cmp-val">₪211</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 נטו מלינדה</div>
-<div class="sup-cmp-val muted">₪115</div>
-<div class="sup-cmp-val">₪210</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 דיפלומט</div>
-<div class="sup-cmp-val muted">₪111</div>
-<div class="sup-cmp-val">₪202</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 איתמר ואורן</div>
-<div class="sup-cmp-val muted">₪96</div>
-<div class="sup-cmp-val">₪175</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 דים סאם</div>
-<div class="sup-cmp-val muted">₪95</div>
-<div class="sup-cmp-val">₪174</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row green-row">
-<div class="sup-cmp-name">🟢 זטופאק לחם</div>
-<div class="sup-cmp-val muted">₪196</div>
-<div class="sup-cmp-val">₪164</div>
-<div class="sup-cmp-badge green">-16%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 מושיקו רזל</div>
-<div class="sup-cmp-val muted">₪67</div>
-<div class="sup-cmp-val">₪123</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-<div class="sup-cmp-row red-row">
-<div class="sup-cmp-name">🔴 מטעים גשור</div>
-<div class="sup-cmp-val muted">₪60</div>
-<div class="sup-cmp-val">₪110</div>
-<div class="sup-cmp-badge red">+82%</div>
-</div>
-
-<div class="sup-cmp-legend">
-<span>🔴 מעל +40%</span>
-<span>🟠 +15% עד +40%</span>
-<span>🟢 ירידה</span>
-<span>⚪ יציב</span>
-<span style="margin-right:auto">יוני=30 ימים | יולי=7 ימים (MTD)</span>
-</div></div>
-      </div>
       <div class="note-box">יולי 2026 בתהליך — נתוני שכר ומזון יתעדכנו אוטומטית עם הסנכרון היומי</div>
-      <div class="last-upd" id="jun-last-upd"></div>
+      <div class="last-upd" id="jul-last-upd"></div>
     </div>
   </div>
 
-  <!-- MAY PANE -->
-  <div class="tab-pane" id="pane-jun">
+  <!-- JUN PANE -->
+  <div class="tab-pane" id="pane-__JUN__">
     <div class="container">
 
-      <div class="hero green" id="may-hero">
+      <div class="hero green" id="__JUN__-hero">
         <div>
           <div class="lbl">סה"כ עלויות מתוך מכירות נטו</div>
-          <div class="big" id="may-total-pct">—</div>
-          <div class="sub" id="may-hero-sub">מאי 2026 — סגור</div>
+          <div class="big" id="__JUN__-total-pct">—</div>
+          <div class="sub" id="__JUN__-hero-sub">יוני 2026 — סגור</div>
         </div>
-        <div style="font-size:36px" id="may-hero-emoji">🟢</div>
+        <div style="font-size:36px" id="__JUN__-hero-emoji">🟢</div>
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi purple"><div class="kpi-lbl">מכירות ברוטו</div><div class="kpi-val" id="may-k-sales-vat">—</div><div class="kpi-sub">כולל מע"מ</div></div>
-        <div class="kpi violet"><div class="kpi-lbl">מכירות נטו</div><div class="kpi-val" id="may-k-sales-net">—</div><div class="kpi-sub">ללא מע"מ</div></div>
-        <div class="kpi cyan"><div class="kpi-lbl">מכירות Wolt</div><div class="kpi-val" id="may-k-wolt-sales">—</div><div class="kpi-sub" id="may-k-wolt-pct-sales">—% מברוטו</div></div>
-        <div class="kpi green"><div class="kpi-lbl">ממוצע יומי</div><div class="kpi-val" id="may-k-daily-avg">—</div><div class="kpi-sub" id="may-k-days-sub">31 ימים</div></div>
+        <div class="kpi purple"><div class="kpi-lbl">מכירות ברוטו</div><div class="kpi-val" id="__JUN__-k-sales-vat">—</div><div class="kpi-sub">כולל מע"מ</div></div>
+        <div class="kpi violet"><div class="kpi-lbl">מכירות נטו</div><div class="kpi-val" id="__JUN__-k-sales-net">—</div><div class="kpi-sub">ללא מע"מ</div></div>
+        <div class="kpi cyan"><div class="kpi-lbl">סועדים</div><div class="kpi-val" id="__JUN__-k-diners">—</div><div class="kpi-sub" id="__JUN__-k-avg">ממוצע</div></div>
+        <div class="kpi green"><div class="kpi-lbl">ממוצע יומי</div><div class="kpi-val" id="__JUN__-k-daily-avg">—</div><div class="kpi-sub">31 ימים</div></div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi yellow">
           <div class="kpi-lbl">שכר עבודה</div>
-          <div class="kpi-val" id="may-k-labor">—</div>
-          <div class="kpi-sub" id="may-k-labor-pct">—</div>
-          <div class="bar"><div class="bf o" id="may-bar-labor" style="width:0%"></div></div>
+          <div class="kpi-val" id="__JUN__-k-labor">—</div>
+          <div class="kpi-sub" id="__JUN__-k-labor-pct">—</div>
+          <div class="bar"><div class="bf o" id="__JUN__-bar-labor" style="width:0%"></div></div>
         </div>
         <div class="kpi red">
           <div class="kpi-lbl">עלות מזון</div>
-          <div class="kpi-val" id="may-k-food">—</div>
-          <div class="kpi-sub" id="may-k-food-pct">—</div>
-          <div class="bar"><div class="bf r" id="may-bar-food" style="width:0%"></div></div>
+          <div class="kpi-val" id="__JUN__-k-food">—</div>
+          <div class="kpi-sub" id="__JUN__-k-food-pct">—</div>
+          <div class="bar"><div class="bf r" id="__JUN__-bar-food" style="width:0%"></div></div>
         </div>
         <div class="kpi orange">
           <div class="kpi-lbl">Wolt (עמלה 24%)</div>
-          <div class="kpi-val" id="may-k-wolt">—</div>
-          <div class="kpi-sub" id="may-k-wolt-pct">—</div>
-          <div class="bar"><div class="bf w" id="may-bar-wolt" style="width:0%"></div></div>
+          <div class="kpi-val" id="__JUN__-k-wolt">—</div>
+          <div class="kpi-sub" id="__JUN__-k-wolt-pct">—</div>
+          <div class="bar"><div class="bf w" id="__JUN__-bar-wolt" style="width:0%"></div></div>
         </div>
         <div class="kpi indigo">
           <div class="kpi-lbl">סה"כ עלויות</div>
-          <div class="kpi-val" id="may-k-total-pct">—</div>
+          <div class="kpi-val" id="__JUN__-k-total-pct">—</div>
           <div class="kpi-sub">יעד: מתחת ל-63%</div>
-          <div class="bar"><div class="bf p" id="may-bar-total" style="width:0%"></div></div>
+          <div class="bar"><div class="bf p" id="__JUN__-bar-total" style="width:0%"></div></div>
         </div>
       </div>
 
       <div class="section">
         <div class="s-title">פירוט עלויות — יוני</div>
-        <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="may-cr-labor">—</div></div>
-        <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="may-cr-food">—</div></div>
-        <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="may-cr-wolt-comm">—</div></div>
-        <div class="cr total-row"><div class="l">סה"כ עלויות</div><div class="v" id="may-cr-total">—</div></div>
+        <div class="cr"><div class="l">שכר עבודה<div class="src">Tabit Chef</div></div><div class="v" id="__JUN__-cr-labor">—</div></div>
+        <div class="cr"><div class="l">עלות מזון<div class="src">Zester</div></div><div class="v" id="__JUN__-cr-food">—</div></div>
+        <div class="cr"><div class="l">עמלת Wolt (24%)<div class="src">Tabit Tender Report</div></div><div class="v" id="__JUN__-cr-wolt-comm">—</div></div>
+        <div class="cr total-row"><div class="l">סה"כ עלויות</div><div class="v" id="__JUN__-cr-total">—</div></div>
       </div>
 
       <div class="section">
         <div class="s-title">Wolt — יוני</div>
         <div class="wolt-card">
-          <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="may-wolt-sales">—</div></div>
-          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="may-wolt-commission">—</div></div>
-          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">אחוז מסה"כ מכירות</div><div class="v" id="may-wolt-pct-of-sales">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;margin-bottom:4px;"><div class="l">מכירות Wolt ברוטו</div><div class="v" id="__JUN__-wolt-sales">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">עמלה 24%</div><div class="v" id="__JUN__-wolt-commission">—</div></div>
+          <div class="cr" style="background:transparent;padding:4px 0;"><div class="l">אחוז מסה"כ מכירות</div><div class="v" id="__JUN__-wolt-pct-of-sales">—</div></div>
         </div>
       </div>
 
       <div class="section">
-        <div class="s-title">ספקים — מאי 2026</div>
-        <div class="sup-grid" id="may-sup-grid"></div>
+        <div class="s-title">ספקים — יוני 2026</div>
+        <div class="sup-grid" id="__JUN__-sup-grid"></div>
       </div>
 
-      <div class="last-upd" id="may-last-upd"></div>
+      <div class="last-upd" id="__JUN__-last-upd"></div>
     </div>
   </div>
 </div><!-- /app -->
@@ -586,15 +326,23 @@ const ROSA  = 'https://rosa-6d8ebb9e.base44.app/api/functions';
 
 // State — pre-loaded with confirmed entity data
 const S = {
-  
   jun: {
     salesVat: 494639, salesNet: 419185,
     labor: 120485, food: 181200, wolt: 165000,
+    diners: 0,
+    vendors: [
+      {name:'חמישה קצבים',net:23590},{name:'מאסטרפוד',net:21477},
+      {name:'מילועוף',net:19423},{name:'מ.ר כלים',net:15877},
+      {name:'אחים כהן',net:8543},{name:'י.שבי שיווק',net:8191},
+      {name:'אהרון שיווק',net:7503},{name:'זטופאק לחם',net:6079},
+      {name:'א. ביסקוטי',net:5999},{name:'חמים וטעים',net:5082}
+    ],
     lastUpdated: '2026-06-30T23:59:00'
   },
   jul: {
     salesVat: 120111, salesNet: 101789,
     labor: 25465.5, food: 0, wolt: 40688.9,
+    diners: 0,
     lastUpdated: '2026-07-07T04:29:09'
   }
 };
@@ -607,54 +355,53 @@ function el(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
 function barW(id,pct){ const e=document.getElementById(id); if(e) e.style.width=Math.min(100,Math.max(0,pct))+'%'; }
 function inp(id,v){ const e=document.getElementById(id); if(e&&v) e.value=v; }
 
-function renderMay(){
-  const s = S.may;
+function render__JUN_C__(){
+  const s = S.__JUN__;
   const wc = Math.round(s.wolt*0.24);
   const lp = (s.labor/s.salesNet*100);
   const fp = (s.food/s.salesNet*100);
   const wp = (wc/s.salesVat*100);
   const tp = lp+fp+wp;
 
-  const heroEl = document.getElementById('may-hero');
+  const heroEl = document.getElementById('__JUN__-hero');
   heroEl.className = 'hero '+(tp<63?'green':tp<68?'orange':'red');
-  el('may-total-pct', tp.toFixed(1)+'%');
-  el('may-hero-sub', 'מזון '+fp.toFixed(1)+'% | שכר '+lp.toFixed(1)+'% | Wolt '+wp.toFixed(1)+'%');
-  el('may-hero-emoji', tp<63?'🟢':tp<68?'🟡':'🔴');
+  el('__JUN__-total-pct', tp.toFixed(1)+'%');
+  el('__JUN__-hero-sub', 'מזון '+fp.toFixed(1)+'% | שכר '+lp.toFixed(1)+'% | Wolt '+wp.toFixed(1)+'%');
+  el('__JUN__-hero-emoji', tp<63?'🟢':tp<68?'🟡':'🔴');
 
-  el('may-k-sales-vat', fmt(s.salesVat));
-  el('may-k-sales-net', fmt(s.salesNet));
-  el('may-k-wolt-sales', fmt(s.wolt));
-  el('may-k-wolt-pct-sales', (s.wolt/s.salesVat*100).toFixed(1)+'% מברוטו');
-  el('may-k-daily-avg', fmt(s.salesVat/31));
-  el('may-k-days-sub', '31 ימים (חודש מלא)');
+  el('__JUN__-k-sales-vat', fmt(s.salesVat));
+  el('__JUN__-k-sales-net', fmt(s.salesNet));
+  el('__JUN__-k-diners', s.diners.toLocaleString('he-IL'));
+  el('__JUN__-k-avg', 'ממוצע: ₪'+Math.round(s.salesVat/s.diners));
+  el('__JUN__-k-daily-avg', fmt(s.salesVat/31));
 
-  el('may-k-labor', fmt(s.labor));
-  el('may-k-labor-pct', lp.toFixed(1)+'% מנטו');
-  barW('may-bar-labor', lp/50*100);
+  el('__JUN__-k-labor', fmt(s.labor));
+  el('__JUN__-k-labor-pct', lp.toFixed(1)+'% מנטו');
+  barW('__JUN__-bar-labor', lp/50*100);
 
-  el('may-k-food', fmt(s.food));
-  el('may-k-food-pct', fp.toFixed(1)+'% מנטו');
-  barW('may-bar-food', fp/50*100);
+  el('__JUN__-k-food', fmt(s.food));
+  el('__JUN__-k-food-pct', fp.toFixed(1)+'% מנטו');
+  barW('__JUN__-bar-food', fp/50*100);
 
-  el('may-k-wolt', fmt(wc));
-  el('may-k-wolt-pct', wp.toFixed(1)+'% מברוטו');
-  barW('may-bar-wolt', wp/15*100);
+  el('__JUN__-k-wolt', fmt(wc));
+  el('__JUN__-k-wolt-pct', wp.toFixed(1)+'% מברוטו');
+  barW('__JUN__-bar-wolt', wp/15*100);
 
-  el('may-k-total-pct', tp.toFixed(1)+'%');
-  barW('may-bar-total', tp/80*100);
+  el('__JUN__-k-total-pct', tp.toFixed(1)+'%');
+  barW('__JUN__-bar-total', tp/80*100);
 
-  el('may-cr-labor', fmtFull(s.labor));
-  el('may-cr-food', fmtFull(s.food));
-  el('may-cr-wolt-comm', fmtFull(wc));
-  el('may-cr-total', fmtFull(s.labor+s.food+wc));
+  el('__JUN__-cr-labor', fmtFull(s.labor));
+  el('__JUN__-cr-food', fmtFull(s.food));
+  el('__JUN__-cr-wolt-comm', fmtFull(wc));
+  el('__JUN__-cr-total', fmtFull(s.labor+s.food+wc));
 
-  el('may-wolt-sales', fmtFull(s.wolt));
-  el('may-wolt-commission', fmtFull(wc));
-  el('may-wolt-pct-of-sales', (wc/s.salesVat*100).toFixed(1)+'% ממכירות');
+  el('__JUN__-wolt-sales', fmtFull(s.wolt));
+  el('__JUN__-wolt-commission', fmtFull(wc));
+  el('__JUN__-wolt-pct-of-sales', (wc/s.salesVat*100).toFixed(1)+'% ממכירות');
 
-  el('may-last-upd', 'עדכון: '+new Date(s.lastUpdated).toLocaleString('he-IL'));
+  el('__JUN__-last-upd', 'עדכון: '+new Date(s.lastUpdated).toLocaleString('he-IL'));
 
-  const grid = document.getElementById('may-sup-grid');
+  const grid = document.getElementById('__JUN__-sup-grid');
   if(grid){
     grid.innerHTML = s.vendors.map(v=>
       '<div class="sup-box"><div class="sl">'+v.name+'</div><div class="sv">₪'+v.net.toLocaleString('he-IL')+'</div><div class="sc">'+((v.net/s.food)*100).toFixed(1)+'% מהמזון</div></div>'
@@ -662,8 +409,8 @@ function renderMay(){
   }
 }
 
-function renderJun(){
-  const s = S.jun;
+function renderJul(){
+  const s = S.jul;
   const wc = Math.round((s.wolt||0)*0.24);
   const hasData = s.salesVat > 0;
   const lp = hasData && s.salesNet>0 ? (s.labor||0)/s.salesNet*100 : 0;
@@ -672,213 +419,109 @@ function renderJun(){
   const tp = lp+fp+wp;
   const days = new Date().getDate();
 
-  const heroEl = document.getElementById('jun-hero');
+  const heroEl = document.getElementById('jul-hero');
   if(hasData){
     heroEl.className = 'hero '+(tp>0?(tp<63?'green':tp<68?'orange':'red'):'gray');
-    el('jun-total-pct', tp>0 ? tp.toFixed(1)+'%' : 'MTD');
-    el('jun-hero-sub', 'שכר '+lp.toFixed(1)+'% (נטו) | מזון '+fp.toFixed(1)+'% (נטו) | Wolt '+wp.toFixed(1)+'% (ברוטו)');
-    el('jun-hero-emoji', tp>0?(tp<63?'🟢':tp<68?'🟡':'🔴'):'📊');
+    el('jul-total-pct', tp>0 ? tp.toFixed(1)+'%' : 'MTD');
+    el('jul-hero-sub', 'שכר '+lp.toFixed(1)+'% (נטו) | מזון '+fp.toFixed(1)+'% (נטו) | Wolt '+wp.toFixed(1)+'% (ברוטו)');
+    el('jul-hero-emoji', tp>0?(tp<63?'🟢':tp<68?'🟡':'🔴'):'📊');
   } else {
     heroEl.className = 'hero gray';
-    el('jun-total-pct', '—');
-    el('jun-hero-sub', 'ממתין לנתונים');
-    el('jun-hero-emoji', '⏳');
+    el('jul-total-pct', '—');
+    el('jul-hero-sub', 'ממתין לנתונים');
+    el('jul-hero-emoji', '⏳');
   }
 
-  el('jun-k-sales-vat', hasData ? fmt(s.salesVat) : '—');
-  el('jun-k-sales-net', hasData ? fmt(s.salesNet)  : '—');
-  el('jun-k-daily-avg', hasData ? fmt(s.salesVat/days) : '—');
-  el('jun-k-days-sub', days + ' ימים מתוך 30');
-  el('jun-k-updated', s.lastUpdated ? new Date(s.lastUpdated).toLocaleDateString('he-IL') : '—');
+  el('jul-k-sales-vat', hasData ? fmt(s.salesVat) : '—');
+  el('jul-k-sales-net', hasData ? fmt(s.salesNet)  : '—');
+  el('jul-k-days', days);
+  el('jul-k-avg', hasData ? 'ממוצע: ₪'+Math.round(s.salesVat/days) : 'ממוצע: —');
+  el('jul-k-updated', s.lastUpdated ? new Date(s.lastUpdated).toLocaleDateString('he-IL') : '—');
 
-  el('jun-k-labor',     (s.labor||0)>0 ? fmt(s.labor) : '—');
-  el('jun-k-labor-pct', lp>0 ? lp.toFixed(1)+'% מנטו' : 'ממתין');
-  barW('jun-bar-labor', lp/50*100);
+  el('jul-k-labor',     (s.labor||0)>0 ? fmt(s.labor) : '—');
+  el('jul-k-labor-pct', lp>0 ? lp.toFixed(1)+'% מנטו' : 'ממתין');
+  barW('jul-bar-labor', lp/50*100);
 
-  el('jun-k-food',     (s.food||0)>0 ? fmt(s.food) : '—');
-  el('jun-k-food-pct', fp>0 ? fp.toFixed(1)+'% מנטו' : 'ממתין');
-  barW('jun-bar-food', fp/50*100);
+  el('jul-k-food',     (s.food||0)>0 ? fmt(s.food) : '—');
+  el('jul-k-food-pct', fp>0 ? fp.toFixed(1)+'% מנטו' : 'ממתין');
+  barW('jul-bar-food', fp/50*100);
 
-  el('jun-k-wolt',     wc>0 ? fmt(wc) : '—');
-  el('jun-k-wolt-pct', wp>0 ? wp.toFixed(1)+'% מברוטו' : 'ממתין');
-  barW('jun-bar-wolt', wp/15*100);
+  el('jul-k-wolt',     wc>0 ? fmt(wc) : '—');
+  el('jul-k-wolt-pct', wp>0 ? wp.toFixed(1)+'% מברוטו' : 'ממתין');
+  barW('jul-bar-wolt', wp/15*100);
 
-  el('jun-k-total-pct', tp>0 ? tp.toFixed(1)+'%' : '—');
-  barW('jun-bar-total', tp/80*100);
+  el('jul-k-total-pct', tp>0 ? tp.toFixed(1)+'%' : '—');
+  barW('jul-bar-total', tp/80*100);
 
-  el('jun-cr-labor',     (s.labor||0)>0 ? fmtFull(s.labor) : '—');
-  el('jun-cr-food',      (s.food||0)>0  ? fmtFull(s.food)  : '—');
-  el('jun-cr-wolt-comm', wc>0 ? fmtFull(wc) : '—');
-  el('jun-cr-total',     ((s.labor||0)+(s.food||0)+wc)>0 ? fmtFull((s.labor||0)+(s.food||0)+wc) : '—');
+  el('jul-cr-labor',     (s.labor||0)>0 ? fmtFull(s.labor) : '—');
+  el('jul-cr-food',      (s.food||0)>0  ? fmtFull(s.food)  : '—');
+  el('jul-cr-wolt-comm', wc>0 ? fmtFull(wc) : '—');
+  el('jul-cr-total',     ((s.labor||0)+(s.food||0)+wc)>0 ? fmtFull((s.labor||0)+(s.food||0)+wc) : '—');
 
-  el('jun-wolt-sales',         (s.wolt||0)>0 ? fmtFull(s.wolt) : '—');
-  el('jun-wolt-commission',    wc>0 ? fmtFull(wc) : '—');
-  el('jun-wolt-pct-of-sales',  hasData&&wc>0 ? (wc/s.salesVat*100).toFixed(1)+'% ממכירות' : '—');
+  el('jul-wolt-sales',         (s.wolt||0)>0 ? fmtFull(s.wolt) : '—');
+  el('jul-wolt-commission',    wc>0 ? fmtFull(wc) : '—');
+  el('jul-wolt-pct-of-sales',  hasData&&wc>0 ? (wc/s.salesVat*100).toFixed(1)+'% ממכירות' : '—');
 
-  el('jun-last-upd', s.lastUpdated ? 'עדכון: '+new Date(s.lastUpdated).toLocaleString('he-IL') : '');
+  el('jul-last-upd', s.lastUpdated ? 'עדכון: '+new Date(s.lastUpdated).toLocaleString('he-IL') : '');
 
-  if(s.labor) inp('jun-labor-input', s.labor);
-  if(s.wolt)  inp('jun-wolt-input',  s.wolt);
-  if(s.food)  inp('jun-food-input',  s.food);
-  if(s.salesVat) inp('jun-sales-input', s.salesVat);
+  if(s.labor) inp('jul-labor-input', s.labor);
+  if(s.wolt)  inp('jul-wolt-input',  s.wolt);
+  if(s.food)  inp('jul-food-input',  s.food);
+  if(s.salesVat) inp('jul-sales-input', s.salesVat);
 }
 
-
-// ==================== SUPPLIER COMPARISON ====================
-// May full-month data (31 days) — verified from Zester
-const MAY_VENDORS_FULL = [
-  {name:'חמישה קצבים',    net:23590.50},
-  {name:'מאסטרפוד',       net:21476.68},
-  {name:'מילועוף',        net:19423.10},
-  {name:'מ.ר כלים',       net:15877.21},
-  {name:'י.שבי שיווק',    net:8191.42},
-  {name:'אחים כהן',       net:8543.39},
-  {name:'אהרון שיווק',    net:7502.55},
-  {name:'זטופאק לחם',     net:6078.96},
-  {name:'א. ביסקוטי',     net:3906.77},
-  {name:'חמים וטעים',     net:5082.20},
-  {name:'ג.י אשכול',      net:5919.34},
-  {name:'עונות ישראל',    net:4840.91},
-  {name:'א.מ.א קייטרינג', net:3588.00},
-  {name:'נטו מלינדה',     net:3576.37},
-  {name:'דיפלומט',        net:3444.40},
-  {name:'איתמר ואורן',    net:2985.00},
-  {name:'דים סאם',        net:2966.72},
-  {name:'מושיקו רזל',     net:2099.00},
-  {name:'מטעים גשור',     net:1872.00},
-];
-const MAY_DAYS = 31;
-const JUN_DAYS_TOTAL = 30;
-
-// June actual vendor data (1-17 June, from Zester)
-const JUN_VENDORS_17 = [
-  {name:'חמישה קצבים',    net:14139.65},
-  {name:'מאסטרפוד',       net:15162.47},
-  {name:'מילועוף',        net:10043.54},
-  {name:'מ.ר כלים',       net:14552.15},
-  {name:'י.שבי שיווק',    net:7179.00},
-  {name:'אחים כהן',       net:6255.62},
-  {name:'אהרון שיווק',    net:6350.24},
-  {name:'זטופאק לחם',     net:2796.00},
-  {name:'א. ביסקוטי',     net:3906.77},
-  {name:'חמים וטעים',     net:7019.45},
-  {name:'ג.י אשכול',      net:5919.34},
-  {name:'עונות ישראל',    net:4840.91},
-  {name:'א.מ.א קייטרינג', net:3588.00},
-  {name:'נטו מלינדה',     net:3576.37},
-  {name:'דיפלומט',        net:3444.40},
-  {name:'איתמר ואורן',    net:2985.00},
-  {name:'דים סאם',        net:2966.72},
-  {name:'מושיקו רזל',     net:2099.00},
-  {name:'מטעים גשור',     net:1872.00},
-];
-const JUN_COLLECTED_DAYS = 17; // updated to current
-
-function renderSupplierComparison() {
-  const el = document.getElementById('jun-sup-compare');
-  if (!el) return;
-
-  // Build lookup: may daily avg per supplier
-  const mayDaily = {};
-  MAY_VENDORS_FULL.forEach(v => { mayDaily[v.name] = v.net / MAY_DAYS; });
-
-  // Sort june vendors by amount desc
-  const sorted = [...JUN_VENDORS_17].sort((a,b) => b.net - a.net);
-
-  let html = '';
-
-  // Header
-  html += '<div class="sup-cmp-hdr">';
-  html += '<div>ספק</div>';
-  html += '<div style="text-align:center">מאי/יום</div>';
-  html += '<div style="text-align:center">יוני/יום</div>';
-  html += '<div style="text-align:center">שינוי</div>';
-  html += '</div>';
-
-  sorted.forEach(v => {
-    const jd = v.net / JUN_COLLECTED_DAYS;
-    const md = mayDaily[v.name] || 0;
-    const diff = md > 0 ? ((jd - md) / md * 100) : 0;
-    const diffStr = (diff >= 0 ? '+' : '') + diff.toFixed(0) + '%';
-
-    let rowClass = '';
-    let badgeClass = 'white';
-    if (diff >= 40) { rowClass = 'red-row'; badgeClass = 'red'; }
-    else if (diff >= 15) { rowClass = 'orange-row'; badgeClass = 'orange'; }
-    else if (diff <= -10) { rowClass = 'green-row'; badgeClass = 'green'; }
-
-    const icon = diff >= 40 ? '🔴' : diff >= 15 ? '🟠' : diff <= -10 ? '🟢' : '⚪';
-
-    html += '<div class="sup-cmp-row ' + rowClass + '">';
-    html += '<div class="sup-cmp-name">' + icon + ' ' + v.name + '</div>';
-    html += '<div class="sup-cmp-val muted">₪' + Math.round(md).toLocaleString('he-IL') + '</div>';
-    html += '<div class="sup-cmp-val">₪' + Math.round(jd).toLocaleString('he-IL') + '</div>';
-    html += '<div class="sup-cmp-badge ' + badgeClass + '">' + diffStr + '</div>';
-    html += '</div>';
-  });
-
-  // Legend
-  html += '<div class="sup-cmp-legend">';
-  html += '<span>🔴 מעל +40%</span>';
-  html += '<span>🟠 +15% עד +40%</span>';
-  html += '<span>🟢 ירידה</span>';
-  html += '<span>⚪ יציב</span>';
-  html += '<span style="margin-right:auto">מאי=' + MAY_DAYS + ' ימים | יוני=' + JUN_COLLECTED_DAYS + ' ימים</span>';
-  html += '</div>';
-
-  el.innerHTML = html;
-}
-
-
-function renderAll(){ renderMay(); renderJun(); renderSupplierComparison(); }
+function renderAll(){ render__JUN_C__(); renderJul(); }
 
 function switchTab(t){
   activeTab = t;
-  ['jun','may'].forEach(x=>{
+  ['jul','__JUN__'].forEach(x=>{
     document.getElementById('tab-'+x).classList.toggle('active', x===t);
     document.getElementById('pane-'+x).classList.toggle('active', x===t);
   });
-  el('h-month', t==='jun' ? 'יוני 2026 — MTD' : 'מאי 2026');
+  el('h-month', t==='jul' ? 'יולי 2026 — MTD' : 'יוני 2026');
 }
 
-function onLaborChange(v){ S.jun.labor=parseFloat(v)||0; renderJun(); }
-function onWoltChange(v) { S.jun.wolt=parseFloat(v)||0;  renderJun(); }
-function onFoodChange(v) { S.jun.food=parseFloat(v)||0;  renderJun(); }
-function onSalesChange(v){ S.jun.salesVat=parseFloat(v)||0; S.jun.salesNet=Math.round(S.jun.salesVat/1.18); renderJun(); }
+function onLaborChange(v){ S.jul.labor=parseFloat(v)||0; renderJul(); }
+function onWoltChange(v) { S.jul.wolt=parseFloat(v)||0;  renderJul(); }
+function onFoodChange(v) { S.jul.food=parseFloat(v)||0;  renderJul(); }
+function onSalesChange(v){ S.jul.salesVat=parseFloat(v)||0; S.jul.salesNet=Math.round(S.jul.salesVat/1.18); renderJul(); }
 
 async function loadFromRosa(){
-  // May data is pre-loaded from verified entity data — do NOT override from Rosa
+  // __JUN_C__ data is pre-loaded in state (solikaSync doesn't support month param)
 
-  // Load JUNE data from Rosa — only apply if Rosa has BETTER data than baked-in
+  // Load JULE data
   try {
     const jr = await fetch(ROSA+'/solikaSync?month=2026-06', {cache:'no-store'});
     if(jr.ok){
       const jraw = await jr.json();
       const jd = jraw.einstein || {};
-      // Only override if Rosa has MORE sales data than what's baked in
-      const rosaVat = jd.sales_vat || 0;
-      if(rosaVat > S.jun.salesVat) {
-        if(jd.sales_vat)   S.jun.salesVat   = jd.sales_vat;
-        if(jd.sales_net)   S.jun.salesNet   = jd.sales_net;
-        if(jd.labor)       S.jun.labor      = jd.labor;
-        if(jd.food)        S.jun.food       = jd.food;
-        if(jd.wolt_vat)    S.jun.wolt       = jd.wolt_vat;
-        if(jraw.last_updated) S.jun.lastUpdated = jraw.last_updated;
-      }
-      // Always take food if Rosa has more (food updates independently)
-      if((jd.food||0) > (S.jun.food||0)) S.jun.food = jd.food;
+      if(jd.sales_vat)   S.jul.salesVat   = jd.sales_vat;
+      if(jd.sales_net)   S.jul.salesNet   = jd.sales_net;
+      if(jd.labor)       S.jul.labor      = jd.labor;
+      if(jd.food)        S.jul.food       = jd.food;
+      if(jd.wolt_vat)    S.jul.wolt       = jd.wolt_vat;
+      if(jraw.last_updated) S.jul.lastUpdated = jraw.last_updated;
     }
   } catch(e){}
 
   renderAll();
-  renderSupplierComparison();
 }
 
 async function triggerSync(){
+  const overlay = document.getElementById('sync-overlay');
+  overlay.style.display = 'flex';
   try {
     await fetch(ROSA+'/solikaTriggerSync',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
-    setTimeout(()=>loadFromRosa(), 4000);
-  } catch(e){}
+    // Wait 5 seconds for backend to finish syncing
+    setTimeout(async () => {
+      await loadFromRosa();
+      overlay.style.display = 'none';
+      alert('הנתונים עודכנו בהצלחה!');
+    }, 5000);
+  } catch(e){
+    overlay.style.display = 'none';
+    alert('שגיאה בסנכרון הנתונים. נסה שוב מאוחר יותר.');
+  }
 }
 
 function checkPW(){
@@ -887,7 +530,6 @@ function checkPW(){
     document.getElementById('paywall').style.display='none';
     document.getElementById('app').style.display='block';
     renderAll();
-    renderSupplierComparison();
     loadFromRosa();
   } else {
     document.getElementById('pw-err').textContent='קוד שגוי, נסה שוב';
@@ -896,36 +538,6 @@ function checkPW(){
 }
 
 document.getElementById('pw-input').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPW(); });
-
-function toggleTheme(){
-  const isLight = document.body.classList.toggle('light');
-  updateThemeBtn(isLight);
-  localStorage.setItem('einstein_theme', isLight ? 'light' : 'dark');
-}
-
-function updateThemeBtn(isLight){
-  const btn = document.getElementById('theme-btn');
-  if(!btn) return;
-  if(isLight){
-    btn.textContent = '🌙 מצב לילה';
-    btn.style.background = '#0ea5e9';
-  } else {
-    btn.textContent = '☀️ מצב יום';
-    btn.style.background = '#6d28d9';
-  }
-}
-
-// Restore theme on load
-window.addEventListener('DOMContentLoaded', function(){
-  const t = localStorage.getItem('einstein_theme');
-  if(t === 'light'){
-    document.body.classList.add('light');
-    updateThemeBtn(true);
-  } else {
-    updateThemeBtn(false);
-  }
-});
-
 </script>
 </body>
 </html>
